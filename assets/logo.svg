@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="FreeToolBox logo">
+  <rect width="64" height="64" rx="14" fill="#ff4b1f"/>
+  <!-- toolbox handle -->
+  <path d="M23 19v-2.5A3.5 3.5 0 0 1 26.5 13h11A3.5 3.5 0 0 1 41 16.5V19" fill="none" stroke="#ffffff" stroke-width="3.6" stroke-linecap="round"/>
+  <!-- toolbox body -->
+  <rect x="9" y="19" width="46" height="30" rx="5" fill="#ffffff"/>
+  <!-- lid seam -->
+  <rect x="9" y="30" width="46" height="4" fill="#ff4b1f"/>
+  <!-- latch -->
+  <rect x="27.5" y="27" width="9" height="10" rx="2" fill="#ff4b1f"/>
+  <circle cx="32" cy="32" r="1.7" fill="#ffffff"/>
+</svg>

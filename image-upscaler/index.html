@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<link rel="icon" href="/assets/logo.png" />
+<title>Upscale Images Online Free — FreeToolBox</title>
+<meta name="description" content="Free AI image upscaler. Upscale images 2x and 4x online, sharpen details and download in high quality. No signup, no watermark, works in your browser." />
+<link rel="canonical" href="https://freetoolbox.tech/image-upscaler/" />
+<meta property="og:title" content="Upscale Images Online Free — FreeToolBox" />
+<meta property="og:description" content="Free AI image upscaler. Upscale images 2x and 4x online, sharpen details and download in high quality. No signup, no watermark, works in your browser." />
+<meta property="og:url" content="https://freetoolbox.tech/image-upscaler/" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f6f4; --surface:#ffffff; --surface2:#f0efec; --ink:#16181d; --muted:#5b606b;
+    --line:#e3e1dc; --accent:#e85d04; --accent-dark:#c24e02; --accent-soft:#fff1e6;
+    --green:#137547; --green-soft:#e6f4ec; --radius:18px;
+    --shadow:0 10px 30px rgba(20,20,20,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#101216; --surface:#171a20; --surface2:#1e222b; --ink:#f2f3f5; --muted:#a6abb6;
+      --line:#2a2f3a; --accent:#ff7a1a; --accent-dark:#ff8f3d; --accent-soft:#2b1d10;
+      --green:#4ade80; --green-soft:#12261a; --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  html,body{margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-dark)}
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:44px}
+  .wrap{max-width:1080px;margin:0 auto;padding:20px 18px 56px}
+  /* top strip */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:6px 0 18px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;letter-spacing:-.02em;font-size:18px}
+  .brand-mark{width:36px;height:36px;border-radius:10px;background:var(--accent);display:grid;place-items:center;color:#fff;flex:0 0 auto}
+  .brand small{display:block;font-weight:600;font-size:12px;color:var(--muted);letter-spacing:0}
+  .pills{display:flex;gap:8px;flex-wrap:wrap}
+  .pill{font-size:12.5px;font-weight:700;background:var(--surface);border:1px solid var(--line);padding:7px 11px;border-radius:999px;color:var(--muted)}
+  .pill b{color:var(--green)}
+  /* heading */
+  h1{font-size:clamp(30px,5vw,46px);line-height:1.05;letter-spacing:-.03em;margin:8px 0 10px;font-weight:800;max-width:720px}
+  h1 em{font-style:normal;color:var(--accent)}
+  .lead{font-size:17px;color:var(--muted);max-width:640px;margin:0 0 8px}
+  .kwline{font-family:"IBM Plex Mono",monospace;font-size:12.5px;color:var(--muted);margin-top:10px}
+  .kwline span{background:var(--surface2);border:1px solid var(--line);padding:4px 8px;border-radius:999px;display:inline-block;margin:2px 2px 2px 0}
+  /* tool */
+  .tool{background:var(--surface);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:18px;margin-top:22px}
+  .drop{border:2px dashed #cfcbc2;border-radius:18px;background:var(--surface2);padding:28px 18px;text-align:center;cursor:pointer;transition:.15s}
+  @media (prefers-color-scheme: dark){.drop{border-color:#3a4152}}
+  .drop:hover,.drop.drag{border-color:var(--accent);background:var(--accent-soft)}
+  .drop strong{display:block;font-size:18px;margin:8px 0 4px}
+  .drop p{margin:0;color:var(--muted);font-size:14px}
+  .drop .formats{margin-top:12px;font-size:12.5px;color:var(--muted)}
+  .btn{appearance:none;border:0;border-radius:12px;padding:12px 18px;font-weight:800;font-family:inherit;font-size:15px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+  .btn-primary{background:var(--accent);color:#fff}
+  .btn-primary:hover{background:var(--accent-dark)}
+  .btn-ghost{background:var(--surface);color:var(--ink);border:1px solid var(--line)}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .controls{display:none;margin-top:18px}
+  .controls.show{display:block}
+  .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+  .preview-box{background:#0b0c0e;border-radius:16px;overflow:hidden;position:relative;min-height:260px;display:grid;place-items:center}
+  .preview-box img{max-width:100%;display:block}
+  .compare{position:relative;width:100%;overflow:hidden;line-height:0;background:#111}
+  .compare img{width:100%;height:auto;display:block}
+  .compare .after-wrap{position:absolute;inset:0;overflow:hidden}
+  .compare .after-wrap img{width:100%}
+  .compare input[type=range]{position:absolute;left:0;right:0;top:50%;width:100%;accent-color:var(--accent);min-height:44px;margin:0;transform:translateY(-50%);opacity:.95}
+  .labels{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;pointer-events:none;z-index:2}
+  .labels span{background:rgba(0,0,0,.72);color:#fff;font-size:11px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 8px;border-radius:999px}
+  .side h3{margin:2px 0 10px;font-size:15px}
+  .seg{display:flex;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+  .seg button{flex:1;border:0;background:transparent;border-radius:9px;font-weight:800;font-family:inherit;padding:10px;cursor:pointer;color:var(--muted);min-height:44px}
+  .seg button.active{background:var(--surface);color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08);border:1px solid var(--line)}
+  .seg button.active strong{color:var(--accent)}
+  .checks{display:grid;gap:10px;margin:14px 0}
+  .check{display:flex;gap:10px;align-items:flex-start;background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .check input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}
+  .check b{display:block;font-size:14px}
+  .check span{font-size:13px;color:var(--muted);display:block}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+  .stat{background:var(--surface2);border:1px solid var(--line);border-radius:12px;padding:12px}
+  .stat label{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:800;display:block}
+  .stat strong{font-size:16px;display:block;margin-top:2px}
+  .stat span{font-size:12.5px;color:var(--muted)}
+  .progress{display:none;height:10px;background:var(--surface2);border-radius:999px;overflow:hidden;border:1px solid var(--line);margin:12px 0}
+  .progress.show{display:block}
+  .progress i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s}
+  .status{font-size:13.5px;color:var(--muted);min-height:20px;margin:6px 0}
+  .status.ok{color:var(--green);font-weight:700}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+  .actions .btn{flex:1;min-width:150px}
+  /* sections */
+  section{margin-top:44px}
+  h2{font-size:26px;letter-spacing:-.02em;margin:0 0 8px;line-height:1.15}
+  .sub{color:var(--muted);margin:0 0 18px;max-width:640px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media(max-width:760px){.steps{grid-template-columns:1fr}}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px}
+  .num{width:34px;height:34px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:800;margin-bottom:10px}
+  .step h3{margin:0 0 6px;font-size:16px}.step p{margin:0;color:var(--muted);font-size:14.5px}
+  .uses{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:760px){.uses{grid-template-columns:1fr}}
+  .use{border-top:3px solid var(--accent);background:var(--surface);border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);border-radius:0 0 14px 14px;padding:16px}
+  .use h3{margin:0 0 6px;font-size:16px}.use p{margin:0;color:var(--muted);font-size:14.5px}
+  details{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:4px 16px;margin-bottom:10px}
+  summary{font-weight:700;cursor:pointer;padding:12px 0;display:flex;align-items:center}
+  details p{color:var(--muted);margin:0 0 14px;font-size:15px}
+  .note{background:var(--green-soft);border:1px solid var(--line);border-radius:14px;padding:16px;font-size:14.5px}
+  .note b{color:var(--green)}
+  footer{margin-top:48px;border-top:1px solid var(--line);padding-top:18px;color:var(--muted);font-size:13.5px;display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  footer a{font-weight:700;text-decoration:none}
+  .file-picker{margin-top:16px;display:flex;justify-content:center}
+  .file-picker input[type="file"]{font-family:inherit;font-size:14px;font-weight:600;color:var(--muted);max-width:100%}
+  .file-picker input[type="file"]::file-selector-button{background:var(--accent);color:#fff;border:0;border-radius:12px;padding:12px 18px;font-weight:800;font-family:inherit;font-size:15px;cursor:pointer;margin-right:10px;min-height:44px}
+  .file-picker input[type="file"]::file-selector-button:hover{background:var(--accent-dark)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4.5 4.5 0 0 0-6 6L3 18l3 3 5.7-5.7a4.5 4.5 0 0 0 6-6L14 13l-3-3 3.7-3.7z"/></svg>
+      </span>
+      <span>FreeToolBox<small>Free online image tools</small></span>
+    </div>
+    <div class="pills"><span class="pill"><b>●</b> 100% Free</span><span class="pill">No signup</span><span class="pill">No watermark</span><span class="pill">Runs in browser</span></div>
+  </div>
+
+  <h1>AI Image Upscaler — make small images <em>big &amp; sharp</em></h1>
+  <p class="lead">Upload a low-resolution photo and upscale it 2× or 4× with detail sharpening. Perfect for blurry screenshots, old photos, product images and social media posts — then download the result in full quality.</p>
+  <div class="kwline"><span>ai upscale image</span><span>imgupscaler</span><span>free photo enhancer</span><span>upscale image online free</span></div>
+
+  <!-- TOOL -->
+  <div class="tool" id="tool">
+    <div class="drop" id="drop">
+      <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" style="color:var(--accent)"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="m21 15-4.5-4.5L6 21"/><path d="M12 3v4M10 5h4"/></svg>
+      <strong>Drop your image here, or choose a file below</strong>
+      <p>Your image never leaves your device — upscaling happens right in this browser tab.</p>
+      <div class="formats">JPG · PNG · WebP &nbsp;|&nbsp; Best results with images under 4000 × 4000 px</div>
+      <div class="file-picker"><input type="file" id="fileInput" accept="image/png,image/jpeg,image/webp,image/*" aria-label="Choose an image to upscale" /></div>
+    </div>
+
+    <div class="controls" id="controls">
+      <div class="grid">
+        <div>
+          <div class="compare" id="compareBox">
+            <div class="labels"><span>Before</span><span>After — drag slider</span></div>
+            <img id="beforeImg" alt="Original uploaded image before upscaling" />
+            <div class="after-wrap" id="afterWrap"><img id="afterImg" alt="Upscaled and sharpened result" /></div>
+            <input type="range" id="compareRange" min="0" max="100" value="55" aria-label="Compare before and after" />
+          </div>
+          <p class="status" id="statusText">Image loaded. Pick a scale and press Upscale image.</p>
+          <div class="progress" id="progress"><i id="progressBar"></i></div>
+        </div>
+        <div class="side">
+          <h3>Upscale scale</h3>
+          <div class="seg" role="group" aria-label="Upscale scale">
+            <button type="button" id="scale2" class="active"><strong>2×</strong> &nbsp;Faster</button>
+            <button type="button" id="scale4"><strong>4×</strong> &nbsp;Extra large</button>
+          </div>
+
+          <div class="checks">
+            <label class="check"><input type="checkbox" id="optSharpen" checked /><span><b>Sharpen details</b><span>Recovers edge clarity that normal resizing loses.</span></span></label>
+            <label class="check"><input type="checkbox" id="optEnhance" checked /><span><b>Enhance colour &amp; contrast</b><span>A gentle boost so flat, faded photos look alive again.</span></span></label>
+            <label class="check"><input type="checkbox" id="optSmooth" /><span><b>Smooth grain</b><span>Softens noise in grainy or compressed photos before sharpening.</span></span></label>
+          </div>
+
+          <h3>Result</h3>
+          <div class="stats">
+            <div class="stat"><label>Original</label><strong id="statOrig">—</strong><span id="statOrigSize">—</span></div>
+            <div class="stat"><label>Upscaled</label><strong id="statNew">—</strong><span id="statNewSize">Preview after upscaling</span></div>
+          </div>
+
+          <label style="font-size:13px;font-weight:700;display:block;margin-bottom:6px" for="formatSel">Download format</label>
+          <select id="formatSel" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font-family:inherit;font-weight:600">
+            <option value="png">PNG — best quality</option>
+            <option value="jpeg">JPG — smaller file</option>
+            <option value="webp">WebP — best for websites</option>
+          </select>
+
+          <div class="actions">
+            <button class="btn btn-primary" id="upscaleBtn" type="button">Upscale image</button>
+            <button class="btn btn-ghost" id="downloadBtn" type="button" disabled>Download result</button>
+          </div>
+          <div class="actions">
+            <button class="btn btn-ghost" id="resetBtn" type="button">Use a different image</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:16px"><b>Honest note on quality:</b> this upscaler enlarges your image in steps and then rebuilds sharpness with detail enhancement — it is not just a stretched resize. Very blurry or tiny images (under 200 px) will improve, but no tool can invent detail that was never captured.</div>
+
+  <section>
+    <h2>How to upscale an image</h2>
+    <p class="sub">Three steps, under a minute for most photos.</p>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Upload your image</h3><p>Drop in a JPG, PNG or WebP file. Screenshots, old scans, product photos and profile pictures all work.</p></div>
+      <div class="step"><div class="num">2</div><h3>Choose 2× or 4×</h3><p>2× is ideal for social media and websites. 4× gives you print-friendly size. Keep sharpening on for the clearest result.</p></div>
+      <div class="step"><div class="num">3</div><h3>Compare &amp; download</h3><p>Drag the before and after slider to check the detail, then download as PNG, JPG or WebP — no watermark, ever.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>When upscaling actually helps</h2>
+    <p class="sub">Real jobs where a bigger, sharper image makes the difference.</p>
+    <div class="uses">
+      <div class="use"><h3>Product photos for your store</h3><p>Marketplace listings zoom in on your photos. Upscaling a small supplier image to 2× keeps it crisp instead of pixelated, which builds buyer trust.</p></div>
+      <div class="use"><h3>Old &amp; scanned family photos</h3><p>Scans and old phone photos are often tiny. Upscale them before printing or framing so faces and details hold up at larger sizes.</p></div>
+      <div class="use"><h3>Screenshots &amp; thumbnails</h3><p>A grainy screenshot enlarged for a presentation or video thumbnail looks unprofessional. Sharpening plus 2× upscale fixes most of it.</p></div>
+      <div class="use"><h3>Profile pictures &amp; social posts</h3><p>Platforms compress uploads hard. Starting from a larger, sharper image means the compressed version still looks clean.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Frequently asked questions</h2>
+    <details open><summary>Is this image upscaler really free?</summary><p>Yes. Upscaling is free with no signup, no watermark and no daily limit on this page, because the work happens in your own browser instead of on an expensive server.</p></details>
+    <details><summary>What is the difference between 2× and 4×?</summary><p>2× doubles both dimensions — a 800 × 600 image becomes 1600 × 1200. 4× makes it 3200 × 2400. Bigger is not always better: if the original is very blurry, 2× usually looks cleaner than 4×.</p></details>
+    <details><summary>Are my images uploaded anywhere?</summary><p>No. The file is processed locally in your browser tab and is never sent to a server. Closing the tab removes everything.</p></details>
+    <details><summary>Why does my upscaled image still look soft?</summary><p>Upscaling can sharpen edges and reduce pixelation, but it cannot recreate detail that the original never captured. Turn on Sharpen details and Smooth grain, and try 2× instead of 4× for the cleanest result.</p></details>
+    <details><summary>Which format should I download?</summary><p>PNG for maximum quality and transparency, JPG for the smallest everyday file, and WebP if the image is going on a website and you want quality with a small file size.</p></details>
+  </section>
+
+  <footer>
+    <span>FreeToolBox — free tools that run in your browser.</span>
+    <span>More tools: <a href="https://freetoolbox.tech/">Background Remover</a> · <a href="https://freetoolbox.tech/image-resizer/">Image Resizer</a> · <a href="https://freetoolbox.tech/image-compressor/">Image Compressor</a></span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var fileInput=document.getElementById('fileInput');
+  var drop=document.getElementById('drop');
+  var controls=document.getElementById('controls');
+  var beforeImg=document.getElementById('beforeImg');
+  var afterImg=document.getElementById('afterImg');
+  var afterWrap=document.getElementById('afterWrap');
+  var range=document.getElementById('compareRange');
+  var statusText=document.getElementById('statusText');
+  var progress=document.getElementById('progress');
+  var progressBar=document.getElementById('progressBar');
+  var upscaleBtn=document.getElementById('upscaleBtn');
+  var downloadBtn=document.getElementById('downloadBtn');
+  var resetBtn=document.getElementById('resetBtn');
+  var statOrig=document.getElementById('statOrig');
+  var statOrigSize=document.getElementById('statOrigSize');
+  var statNew=document.getElementById('statNew');
+  var statNewSize=document.getElementById('statNewSize');
+  var scale=2, originalImage=null, originalFile=null, resultBlob=null, resultName='upscaled-image';
+
+  function fmtBytes(b){ if(!b&&b!==0) return '—'; if(b<1024) return b+' B'; if(b<1048576) return (b/1024).toFixed(1)+' KB'; return (b/1048576).toFixed(2)+' MB'; }
+  function setProgress(p){ progress.classList.add('show'); progressBar.style.width=p+'%'; if(p>=100){ setTimeout(function(){progress.classList.remove('show');},500);} }
+
+  function setScale(s){
+    scale=s;
+    document.getElementById('scale2').classList.toggle('active',s===2);
+    document.getElementById('scale4').classList.toggle('active',s===4);
+    if(originalImage){ statNew.textContent=(originalImage.naturalWidth*s)+' × '+(originalImage.naturalHeight*s)+' px'; }
+    resultBlob=null; downloadBtn.disabled=true; statNewSize.textContent='Press Upscale to generate';
+  }
+  document.getElementById('scale2').addEventListener('click',function(){setScale(2);});
+  document.getElementById('scale4').addEventListener('click',function(){setScale(4);});
+
+  function updateCompare(){
+    var v=Number(range.value);
+    afterWrap.style.clipPath='inset(0 0 0 '+v+'%)';
+  }
+  range.addEventListener('input',updateCompare);
+
+  ['dragenter','dragover'].forEach(function(ev){ drop.addEventListener(ev,function(e){ e.preventDefault(); drop.classList.add('drag'); });});
+  ['dragleave','drop'].forEach(function(ev){ drop.addEventListener(ev,function(e){ e.preventDefault(); drop.classList.remove('drag'); });});
+  drop.addEventListener('drop',function(e){ var f=e.dataTransfer.files&&e.dataTransfer.files[0]; if(f) loadFile(f); });
+  fileInput.addEventListener('change',function(){ if(fileInput.files[0]) loadFile(fileInput.files[0]); });
+
+  function loadFile(file){
+    if(!file.type || file.type.indexOf('image/')!==0){ statusText.textContent='That file is not an image. Please choose a JPG, PNG or WebP.'; return; }
+    originalFile=file;
+    resultName=(file.name||'image').replace(/\.[^.]+$/,'')+'-upscaled-'+scale+'x';
+    var url=URL.createObjectURL(file);
+    var img=new Image();
+    img.onload=function(){
+      originalImage=img;
+      beforeImg.src=url; afterImg.src=url;
+      controls.classList.add('show');
+      drop.style.display='none';
+      statOrig.textContent=img.naturalWidth+' × '+img.naturalHeight+' px';
+      statOrigSize.textContent=fmtBytes(file.size)+' · '+(file.type||'image').replace('image/','').toUpperCase();
+      statNew.textContent=(img.naturalWidth*scale)+' × '+(img.naturalHeight*scale)+' px';
+      statNewSize.textContent='Preview after upscaling';
+      statusText.textContent='Image loaded — '+img.naturalWidth+' × '+img.naturalHeight+' px. Pick a scale and press Upscale image.';
+      statusText.className='status';
+      updateCompare();
+      document.getElementById('tool').scrollIntoView({behavior:'smooth',block:'start'});
+    };
+    img.onerror=function(){ statusText.textContent='Could not read that image. Try a different file.'; };
+    img.src=url;
+  }
+
+  // Stepwise upscale for quality: enlarge in small steps instead of one big jump
+  function stepwiseUpscale(img, targetW, targetH, smooth){
+    var cur=document.createElement('canvas'); cur.width=img.naturalWidth; cur.height=img.naturalHeight;
+    var cctx=cur.getContext('2d'); cctx.drawImage(img,0,0);
+    var enhance=document.getElementById('optEnhance').checked;
+    while(cur.width<targetW){
+      var nextW=Math.min(targetW, Math.round(cur.width*1.5)+1);
+      var nextH=Math.round(cur.height*(nextW/cur.width));
+      if(cur.width*1.5>=targetW){ nextW=targetW; nextH=targetH; }
+      var nxt=document.createElement('canvas'); nxt.width=nextW; nxt.height=nextH;
+      var nctx=nxt.getContext('2d');
+      nctx.imageSmoothingEnabled=true; nctx.imageSmoothingQuality='high';
+      if(smooth){ try{ nctx.filter='blur(0.4px)'; }catch(e){} }
+      nctx.drawImage(cur,0,0,nextW,nextH);
+      try{ nctx.filter='none'; }catch(e){}
+      cur=nxt;
+      if(nextW>=targetW) break;
+    }
+    if(enhance){
+      var fctx=cur.getContext('2d');
+      try{ fctx.filter='contrast(1.06) saturate(1.07)'; fctx.drawImage(cur,0,0); fctx.filter='none'; }catch(e){}
+    }
+    return cur;
+  }
+
+  function sharpen(canvas, amount){
+    var w=canvas.width,h=canvas.height; if(w>5200||h>5200) return; // keep huge canvases fast
+    var ctx=canvas.getContext('2d');
+    var src=ctx.getImageData(0,0,w,h); var data=src.data;
+    var copy=new Uint8ClampedArray(data);
+    var k=amount; // centre weight
+    for(var y=1;y<h-1;y++){
+      for(var x=1;x<w-1;x++){
+        var i=(y*w+x)*4;
+        for(var c=0;c<3;c++){
+          var v=copy[i+c]*(1+4*k) - k*(copy[i-4+c]+copy[i+4+c]+copy[i-w*4+c]+copy[i+w*4+c]);
+          data[i+c]=v;
+        }
+      }
+    }
+    ctx.putImageData(src,0,0);
+  }
+
+  upscaleBtn.addEventListener('click',function(){
+    if(!originalImage) return;
+    upscaleBtn.disabled=true; downloadBtn.disabled=true;
+    statusText.textContent='Upscaling… enlarging in steps, then sharpening details.'; statusText.className='status';
+    setProgress(20);
+    setTimeout(function(){
+      try{
+        var targetW=originalImage.naturalWidth*scale, targetH=originalImage.naturalHeight*scale;
+        var smooth=document.getElementById('optSmooth').checked;
+        var canvas=stepwiseUpscale(originalImage,targetW,targetH,smooth);
+        setProgress(70);
+        if(document.getElementById('optSharpen').checked){ sharpen(canvas, scale===4?0.22:0.28); }
+        setProgress(90);
+        var format=document.getElementById('formatSel').value;
+        var mime= format==='png'?'image/png':(format==='webp'?'image/webp':'image/jpeg');
+        canvas.toBlob(function(blob){
+          if(!blob){ statusText.textContent='Upscaling failed for this image — try 2× instead of 4×.'; upscaleBtn.disabled=false; return; }
+          resultBlob=blob;
+          var url=URL.createObjectURL(blob);
+          afterImg.src=url;
+          statNew.textContent=targetW+' × '+targetH+' px';
+          statNewSize.textContent=fmtBytes(blob.size)+' · '+format.toUpperCase();
+          downloadBtn.disabled=false; upscaleBtn.disabled=false;
+          setProgress(100);
+          statusText.textContent='Done — drag the slider to compare. Your upscaled image is ready to download.';
+          statusText.className='status ok';
+        }, mime, 0.95);
+      }catch(err){
+        statusText.textContent='Something went wrong with this image. Try a smaller image or 2× scale.';
+        upscaleBtn.disabled=false; setProgress(0); progress.classList.remove('show');
+      }
+    },60);
+  });
+
+  downloadBtn.addEventListener('click',function(){
+    if(!resultBlob) return;
+    var format=document.getElementById('formatSel').value;
+    var ext= format==='png'?'png':(format==='webp'?'webp':'jpg');
+    var base=(originalFile&&originalFile.name?originalFile.name.replace(/\.[^.]+$/,''):'image');
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(resultBlob);
+    a.download=base+'-upscaled-'+scale+'x.'+ext;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function(){ URL.revokeObjectURL(a.href); },4000);
+  });
+
+  resetBtn.addEventListener('click',function(){
+    originalImage=null; originalFile=null; resultBlob=null;
+    controls.classList.remove('show'); drop.style.display='block';
+    fileInput.value=''; downloadBtn.disabled=true;
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+
+  updateCompare();
+})();
+</script>
+</body>
+</html>

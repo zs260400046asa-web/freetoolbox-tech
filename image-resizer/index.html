@@ -1,0 +1,932 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content="Resize any image online for free. Set exact pixels, use social media presets, keep aspect ratio, and download as PNG, JPG or WebP. No signup, no watermark, files never leave your browser." />
+    <link rel="canonical" href="https://freetoolbox.tech/image-resizer/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://freetoolbox.tech/image-resizer/" />
+    <meta property="og:title" content="Resize Images Online Free — FreeToolBox" />
+    <meta property="og:description" content="Resize any image online for free. Set exact pixels, use social media presets, keep aspect ratio, and download as PNG, JPG or WebP. No signup, no watermark, files never leave your browser." />
+<link rel="icon" href="/assets/logo.png" />
+<title>Resize Images Online Free — FreeToolBox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf8f6;
+    --bg-raise:#ffffff;
+    --surface:#ffffff;
+    --surface-2:#f4f1ed;
+    --surface-3:#ede8e2;
+    --border:#e6ded4;
+    --border-strong:#d8cec0;
+    --text:#1c1710;
+    --text-2:#57504a;
+    --muted:#8a8178;
+    --accent:#e85d0c;
+    --accent-hover:#d14f06;
+    --accent-soft:#ffefe3;
+    --accent-ink:#9a3d05;
+    --green:#15803d;
+    --green-soft:#e8f6ec;
+    --red:#dc2626;
+    --checker:#e9e4dc;
+    --shadow:0 1px 2px rgba(28,23,16,.05),0 12px 32px -12px rgba(28,23,16,.14);
+    --shadow-lg:0 2px 4px rgba(28,23,16,.05),0 24px 48px -16px rgba(232,93,12,.18);
+    --radius:14px;
+    --radius-sm:10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#100e0b;
+      --bg-raise:#171410;
+      --surface:#1a1712;
+      --surface-2:#221e18;
+      --surface-3:#2b2620;
+      --border:#2e2a23;
+      --border-strong:#3d372d;
+      --text:#f5efe6;
+      --text-2:#c9c0b2;
+      --muted:#94897a;
+      --accent:#f97316;
+      --accent-hover:#fb8b3c;
+      --accent-soft:#2e1c0d;
+      --accent-ink:#ffb37e;
+      --green:#4ade80;
+      --green-soft:#12291a;
+      --checker:#26221c;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -12px rgba(0,0,0,.5);
+      --shadow-lg:0 2px 4px rgba(0,0,0,.4),0 24px 48px -16px rgba(0,0,0,.6);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;background:var(--bg);color:var(--text);
+    font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+    -webkit-font-smoothing:antialiased;line-height:1.55;font-size:16px;
+  }
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 88%,transparent);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-in{max-width:1160px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:16px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--text)}
+  .brand:hover{text-decoration:none}
+  .brand-mark{width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center;flex:none;box-shadow:0 4px 12px -4px rgba(232,93,12,.55)}
+  .brand-mark svg{width:19px;height:19px;stroke:#fff}
+  .brand em{font-style:normal;color:var(--accent)}
+  .topnav{margin-left:auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+  .topnav a{color:var(--text-2);font-size:14px;font-weight:600;padding:9px 12px;border-radius:8px;min-height:36px;display:inline-flex;align-items:center}
+  .topnav a:hover{color:var(--text);background:var(--surface-2);text-decoration:none}
+  .topnav a.active{color:var(--accent-ink);background:var(--accent-soft)}
+  @media (max-width:640px){
+    .topbar-in{height:auto;min-height:56px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap;row-gap:2px}
+    .topnav{margin-left:0;width:100%;gap:2px}
+    .topnav a{padding:8px 7px;font-size:12.5px}
+    .brand{font-size:16px}
+  }
+
+  .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+
+  /* ---------- Intro ---------- */
+  .intro{padding:44px 0 8px;text-align:center}
+  .intro h1{font-size:clamp(30px,5vw,46px);line-height:1.08;letter-spacing:-.03em;font-weight:800;margin:0 auto 14px;max-width:720px}
+  .intro h1 .hl{color:var(--accent)}
+  .intro p{color:var(--text-2);font-size:17px;max-width:600px;margin:0 auto}
+  .intro-meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+  .chip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--text-2);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:7px 13px}
+  .chip svg{width:14px;height:14px;stroke:var(--green);flex:none}
+
+  /* ---------- Tool shell ---------- */
+  .tool{margin:28px auto 0;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden}
+
+  /* Upload state */
+  .dropzone{padding:56px 28px;text-align:center;cursor:pointer;transition:background .15s}
+  .dropzone:hover{background:var(--surface-2)}
+  .dropzone.dragging{background:var(--accent-soft)}
+  .dz-icon{width:72px;height:72px;margin:0 auto 18px;border-radius:20px;background:var(--accent-soft);display:grid;place-items:center;border:1.5px dashed color-mix(in srgb,var(--accent) 45%,transparent)}
+  .dz-icon svg{width:32px;height:32px;stroke:var(--accent)}
+  .dropzone h2{margin:0 0 6px;font-size:21px;letter-spacing:-.01em}
+  .dropzone p{margin:0;color:var(--muted);font-size:14.5px}
+  .dz-btn{display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:var(--accent);color:#fff;font-weight:700;font-size:15px;border:0;border-radius:11px;padding:13px 26px;cursor:pointer;min-height:48px;box-shadow:0 8px 20px -8px rgba(232,93,12,.6)}
+  .dz-btn:hover{background:var(--accent-hover)}
+  .dz-formats{margin-top:16px;font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+  .dz-error{display:none;margin:18px auto 0;max-width:440px;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:600}
+  @media (prefers-color-scheme: dark){ .dz-error{background:#2a1212;color:#fca5a5;border-color:#5b2323} }
+
+  /* Editor state */
+  .editor{display:none}
+  .editor.on{display:block}
+  .filebar{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);background:var(--surface-2);flex-wrap:wrap}
+  .filebar .thumb{width:38px;height:38px;border-radius:8px;object-fit:cover;border:1px solid var(--border-strong);background:var(--checker);flex:none}
+  .filebar .fname{font-weight:700;font-size:14px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .filebar .fmeta{font-size:12.5px;color:var(--muted)}
+  .filebar .spacer{flex:1}
+  .btn-ghost{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border-strong);color:var(--text);font-weight:600;font-size:13.5px;border-radius:9px;padding:9px 14px;cursor:pointer;min-height:38px;font-family:inherit}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .btn-ghost svg{width:15px;height:15px}
+
+  .editor-grid{display:grid;grid-template-columns:1fr 380px;min-height:480px}
+  @media (max-width:900px){ .editor-grid{grid-template-columns:1fr} }
+
+  /* Preview pane */
+  .preview-pane{padding:22px;display:flex;flex-direction:column;gap:16px;background:
+    radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);background-size:22px 22px;background-color:var(--bg-raise)}
+  .preview-stage{flex:1;display:grid;place-items:center;min-height:300px}
+  .preview-frame{position:relative;max-width:100%}
+  .preview-frame img{display:block;max-width:100%;max-height:430px;width:auto;height:auto;border-radius:6px;box-shadow:0 10px 34px -10px rgba(0,0,0,.35);background:
+    repeating-conic-gradient(var(--checker) 0% 25%, transparent 0% 50%) 0 0/18px 18px}
+  .dim-badge{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);background:var(--text);color:var(--bg);font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;white-space:nowrap;box-shadow:var(--shadow)}
+  .compare{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:stretch}
+  .compare .box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px 14px;text-align:center}
+  .compare .box .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .compare .box .val{font-size:16px;font-weight:800;margin-top:3px;letter-spacing:-.01em}
+  .compare .box .sub{font-size:12px;color:var(--muted);margin-top:1px}
+  .compare .arrow{display:grid;place-items:center;color:var(--muted)}
+  .compare .arrow svg{width:20px;height:20px}
+  .save-badge{display:none;text-align:center;font-size:13.5px;font-weight:700;color:var(--green);background:var(--green-soft);border-radius:9px;padding:9px 12px}
+  .save-badge.on{display:block}
+  .save-badge.neg{color:var(--accent-ink);background:var(--accent-soft)}
+
+  /* Controls pane */
+  .controls{border-left:1px solid var(--border);padding:22px;display:flex;flex-direction:column;gap:22px;background:var(--surface)}
+  @media (max-width:900px){ .controls{border-left:0;border-top:1px solid var(--border)} }
+  .ctl-group h3{margin:0 0 11px;font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .ctl-group h3 .right{margin-left:auto;text-transform:none;letter-spacing:0}
+
+  .dim-row{display:flex;align-items:flex-end;gap:8px}
+  .dim-field{flex:1}
+  .dim-field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:5px}
+  .dim-field .unit-in{position:relative}
+  .dim-field input{width:100%;padding:10px 34px 10px 12px;border:1.5px solid var(--border-strong);border-radius:10px;background:var(--surface);color:var(--text);font-family:"JetBrains Mono",monospace;font-size:15px;font-weight:600}
+  .dim-field input:focus{border-color:var(--accent);outline:none}
+  .dim-field .unit{position:absolute;right:11px;top:50%;transform:translateY(-50%);font-size:12px;color:var(--muted);font-weight:600;pointer-events:none}
+  .lock-btn{width:42px;height:44px;flex:none;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);cursor:pointer;display:grid;place-items:center;color:var(--muted)}
+  .lock-btn svg{width:17px;height:17px}
+  .lock-btn.locked{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .aspect-note{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .aspect-note b{color:var(--text-2)}
+
+  .pct-row{display:flex;gap:6px;flex-wrap:wrap}
+  .pct-btn{flex:1;min-width:52px;padding:9px 4px;border:1.5px solid var(--border);background:var(--surface);border-radius:9px;font-weight:700;font-size:13.5px;cursor:pointer;color:var(--text-2);font-family:inherit;min-height:40px}
+  .pct-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .pct-btn.active{background:var(--accent);border-color:var(--accent);color:#fff}
+  input[type=range]{width:100%;accent-color:var(--accent);height:36px;cursor:pointer;padding:0}
+  .range-row{display:flex;align-items:center;gap:12px}
+  .range-row .rv{font-family:"JetBrains Mono",monospace;font-weight:600;font-size:14px;min-width:48px;text-align:right}
+
+  .preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .preset-btn{text-align:left;border:1.5px solid var(--border);background:var(--surface);border-radius:10px;padding:10px 12px;cursor:pointer;font-family:inherit;min-height:52px}
+  .preset-btn:hover{border-color:var(--accent)}
+  .preset-btn.active{border-color:var(--accent);background:var(--accent-soft)}
+  .preset-btn .pn{display:block;font-weight:700;font-size:13px;color:var(--text);line-height:1.3}
+  .preset-btn .pd{display:block;font-size:11.5px;color:var(--muted);font-family:"JetBrains Mono",monospace;margin-top:2px}
+
+  .seg{display:flex;background:var(--surface-2);border:1px solid var(--border);border-radius:11px;padding:4px;gap:4px}
+  .seg button{flex:1;border:0;background:transparent;border-radius:8px;font-weight:700;font-size:14px;cursor:pointer;color:var(--text-2);padding:9px 4px;font-family:inherit;min-height:40px}
+  .seg button.active{background:var(--surface);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+  .bg-row{display:none;align-items:center;gap:10px;margin-top:10px;font-size:13.5px;color:var(--text-2);font-weight:600}
+  .bg-row.on{display:flex}
+  .bg-row input[type=color]{width:44px;height:36px;border:1.5px solid var(--border-strong);border-radius:8px;background:var(--surface);padding:2px;cursor:pointer}
+
+  .download-btn{margin-top:auto;width:100%;background:var(--accent);color:#fff;border:0;border-radius:12px;padding:16px;font-size:16px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;min-height:54px;box-shadow:0 10px 24px -10px rgba(232,93,12,.65);font-family:inherit;letter-spacing:-.01em}
+  .download-btn:hover{background:var(--accent-hover)}
+  .download-btn:disabled{opacity:.55;cursor:wait}
+  .download-btn svg{width:19px;height:19px}
+  .dl-note{text-align:center;font-size:12.5px;color:var(--muted);margin-top:-12px}
+
+  /* ---------- Below-tool sections ---------- */
+  section.block{padding:56px 0 0}
+  .block h2{font-size:clamp(23px,3.4vw,30px);letter-spacing:-.02em;margin:0 0 10px;font-weight:800}
+  .block .lead{color:var(--text-2);max-width:640px;margin:0 0 26px;font-size:16px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:760px){ .steps{grid-template-columns:1fr} }
+  .step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+  .step .num{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent-ink);font-weight:800;display:grid;place-items:center;font-size:15px;margin-bottom:13px}
+  .step h3{margin:0 0 6px;font-size:16.5px}
+  .step p{margin:0;color:var(--text-2);font-size:14.5px}
+
+  .feat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:900px){ .feat-row{grid-template-columns:1fr 1fr} }
+  @media (max-width:520px){ .feat-row{grid-template-columns:1fr} }
+  .feat{padding:20px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border)}
+  .feat svg{width:22px;height:22px;stroke:var(--accent);margin-bottom:10px}
+  .feat h3{margin:0 0 5px;font-size:15.5px}
+  .feat p{margin:0;color:var(--text-2);font-size:13.5px}
+
+  .size-table{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;font-size:14.5px}
+  .size-table th{text-align:left;font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:13px 16px;background:var(--surface-2);border-bottom:1px solid var(--border)}
+  .size-table td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-2)}
+  .size-table tr:last-child td{border-bottom:0}
+  .size-table td:first-child{font-weight:700;color:var(--text)}
+  .size-table td.mono{font-size:13.5px}
+  .size-table button{border:1px solid var(--border-strong);background:var(--surface);color:var(--accent);font-weight:700;font-size:12.5px;border-radius:8px;padding:7px 12px;cursor:pointer;font-family:inherit;min-height:36px;white-space:nowrap}
+  .size-table button:hover{background:var(--accent-soft)}
+  @media (max-width:640px){
+    .size-table thead{display:none}
+    .size-table,.size-table tbody,.size-table tr,.size-table td{display:block;width:100%}
+    .size-table tr{padding:12px 16px;border-bottom:1px solid var(--border)}
+    .size-table tr:last-child{border-bottom:0}
+    .size-table td{border:0;padding:2px 0}
+  }
+
+  .faq details{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:9px;overflow:hidden}
+  .faq summary{cursor:pointer;font-weight:700;font-size:15.5px;padding:16px 18px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:52px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-size:21px;color:var(--accent);font-weight:600;line-height:1;flex:none}
+  .faq details[open ] summary::after{content:"–"}
+  .faq .a{padding:0 18px 17px;color:var(--text-2);font-size:14.5px}
+  .faq .a p{margin:0}
+
+  .more-tools{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:640px){ .more-tools{grid-template-columns:1fr} }
+  .tool-card{display:flex;gap:15px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;color:var(--text)}
+  .tool-card:hover{text-decoration:none;border-color:var(--accent)}
+  .tool-card .ic{width:46px;height:46px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
+  .tool-card .ic svg{width:22px;height:22px;stroke:var(--accent)}
+  .tool-card h3{margin:0 0 4px;font-size:16px}
+  .tool-card p{margin:0;color:var(--text-2);font-size:13.5px}
+
+  footer{margin-top:64px;border-top:1px solid var(--border);padding:28px 0 40px;color:var(--muted);font-size:13.5px}
+  footer .wrap{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  footer nav{margin-left:auto;display:flex;gap:18px;flex-wrap:wrap}
+  footer a{color:var(--text-2);font-weight:600;padding:6px 2px;display:inline-block}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="https://freetoolbox.tech/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>
+      </span>
+      Free<em>ToolBox</em>
+    </a>
+    <nav class="topnav" aria-label="Free tools">
+      <a href="https://freetoolbox.tech/">Background Remover</a>
+      <a href="https://freetoolbox.tech/image-compressor/">Image Compressor</a>
+      <a href="#" class="active" aria-current="page">Image Resizer</a>
+      <a href="https://freetoolbox.tech/blog/">Blog</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="intro">
+    <h1>Resize your image to <span class="hl">any size</span>, in seconds</h1>
+    <p>Set exact pixel dimensions or pick a ready-made social media size. Your image is resized right here in your browser — nothing is uploaded, ever.</p>
+    <div class="intro-meta">
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 100% free</span>
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> No signup</span>
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> No watermark</span>
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Private — stays on your device</span>
+    </div>
+  </div>
+
+  <!-- ================= TOOL ================= -->
+  <div class="tool" id="tool">
+
+    <!-- Upload state -->
+    <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Upload an image to resize">
+      <div class="dz-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="9" cy="8" r="1.6"/></svg>
+      </div>
+      <h2>Drop your image here</h2>
+      <p>or click to browse — you can also paste an image with Ctrl+V</p>
+      <span class="dz-btn">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 16V4m0 0l-4 4m4-4l4 4"/><path d="M4 16v3a1 1 0 001 1h14a1 1 0 001-1v-3"/></svg>
+        Choose image
+      </span>
+      <div class="dz-formats">JPG · PNG · WebP · GIF · BMP · AVIF</div>
+      <div class="dz-error" id="dzError" role="alert"></div>
+      <input type="file" id="fileInput" accept="image/*" hidden>
+    </div>
+
+    <!-- Editor state -->
+    <div class="editor" id="editor">
+      <div class="filebar">
+        <img class="thumb" id="fileThumb" alt="">
+        <div>
+          <div class="fname" id="fileName">image.png</div>
+          <div class="fmeta mono" id="fileMeta">—</div>
+        </div>
+        <div class="spacer"></div>
+        <button class="btn-ghost" id="newImageBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 11-2.6-6.4M21 4v5h-5"/></svg>
+          Resize another image
+        </button>
+      </div>
+
+      <div class="editor-grid">
+        <!-- Preview -->
+        <div class="preview-pane">
+          <div class="preview-stage">
+            <div class="preview-frame">
+              <img id="previewImg" alt="Resized image preview">
+              <span class="dim-badge mono" id="dimBadge">—</span>
+            </div>
+          </div>
+          <div class="compare">
+            <div class="box">
+              <div class="lbl">Original</div>
+              <div class="val mono" id="origDims">—</div>
+              <div class="sub mono" id="origSize">—</div>
+            </div>
+            <div class="arrow" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16m0 0l-5-5m5 5l-5 5"/></svg>
+            </div>
+            <div class="box">
+              <div class="lbl">Resized</div>
+              <div class="val mono" id="newDims">—</div>
+              <div class="sub mono" id="newSize">estimating…</div>
+            </div>
+          </div>
+          <div class="save-badge" id="saveBadge"></div>
+        </div>
+
+        <!-- Controls -->
+        <div class="controls">
+
+          <div class="ctl-group">
+            <h3>Dimensions
+              <span class="right">
+                <button class="lock-btn locked" id="lockBtn" type="button" aria-pressed="true" title="Keep aspect ratio" style="width:34px;height:34px;min-height:34px">
+                  <svg id="lockIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+                </button>
+              </span>
+            </h3>
+            <div class="dim-row">
+              <div class="dim-field">
+                <label for="widthInput">Width</label>
+                <div class="unit-in"><input type="number" id="widthInput" min="1" max="12000" inputmode="numeric"><span class="unit">px</span></div>
+              </div>
+              <div class="dim-field">
+                <label for="heightInput">Height</label>
+                <div class="unit-in"><input type="number" id="heightInput" min="1" max="12000" inputmode="numeric"><span class="unit">px</span></div>
+              </div>
+            </div>
+            <div class="aspect-note" id="aspectNote">Aspect ratio locked — the other side updates automatically.</div>
+          </div>
+
+          <div class="ctl-group">
+            <h3>Scale by percentage</h3>
+            <div class="range-row">
+              <input type="range" id="pctRange" min="5" max="200" value="100" step="1" aria-label="Scale percentage">
+              <span class="rv" id="pctVal">100%</span>
+            </div>
+            <div class="pct-row" id="pctRow">
+              <button type="button" class="pct-btn" data-pct="25">25%</button>
+              <button type="button" class="pct-btn" data-pct="50">50%</button>
+              <button type="button" class="pct-btn" data-pct="75">75%</button>
+              <button type="button" class="pct-btn active" data-pct="100">100%</button>
+              <button type="button" class="pct-btn" data-pct="150">150%</button>
+              <button type="button" class="pct-btn" data-pct="200">200%</button>
+            </div>
+          </div>
+
+          <div class="ctl-group">
+            <h3>Popular presets</h3>
+            <div class="preset-grid" id="presetGrid">
+              <button type="button" class="preset-btn" data-w="1080" data-h="1080"><span class="pn">Instagram Post</span><span class="pd">1080 × 1080</span></button>
+              <button type="button" class="preset-btn" data-w="1080" data-h="1920"><span class="pn">Story / Reel Cover</span><span class="pd">1080 × 1920</span></button>
+              <button type="button" class="preset-btn" data-w="1200" data-h="630"><span class="pn">Facebook / OG Post</span><span class="pd">1200 × 630</span></button>
+              <button type="button" class="preset-btn" data-w="1600" data-h="900"><span class="pn">X (Twitter) Post</span><span class="pd">1600 × 900</span></button>
+              <button type="button" class="preset-btn" data-w="1280" data-h="720"><span class="pn">YouTube Thumbnail</span><span class="pd">1280 × 720</span></button>
+              <button type="button" class="preset-btn" data-w="1000" data-h="1500"><span class="pn">Pinterest Pin</span><span class="pd">1000 × 1500</span></button>
+              <button type="button" class="preset-btn" data-w="1200" data-h="627"><span class="pn">LinkedIn Post</span><span class="pd">1200 × 627</span></button>
+              <button type="button" class="preset-btn" data-w="1920" data-h="1080"><span class="pn">Full HD Wallpaper</span><span class="pd">1920 × 1080</span></button>
+            </div>
+          </div>
+
+          <div class="ctl-group">
+            <h3>Output format</h3>
+            <div class="seg" id="formatSeg" role="group" aria-label="Output format">
+              <button type="button" data-fmt="image/png">PNG</button>
+              <button type="button" data-fmt="image/jpeg" class="active">JPG</button>
+              <button type="button" data-fmt="image/webp">WebP</button>
+            </div>
+            <div class="bg-row" id="bgRow">
+              <span>Background (JPG has no transparency):</span>
+              <input type="color" id="bgColor" value="#ffffff" aria-label="Background color for JPG output">
+            </div>
+            <div id="qualityWrap">
+              <div class="range-row" style="margin-top:12px">
+                <input type="range" id="qualityRange" min="10" max="100" value="90" step="1" aria-label="Output quality">
+                <span class="rv" id="qualityVal">90%</span>
+              </div>
+              <div style="font-size:12.5px;color:var(--muted)">Quality — lower means a smaller file.</div>
+            </div>
+          </div>
+
+          <button class="download-btn" id="downloadBtn" type="button">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a1 1 0 001 1h14a1 1 0 001-1v-2"/></svg>
+            <span id="downloadLabel">Download resized image</span>
+          </button>
+          <div class="dl-note">Processed locally in your browser. Nothing is uploaded.</div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HOW TO ================= -->
+  <section class="block">
+    <h2>How to resize an image</h2>
+    <p class="lead">Three steps, no software to install and no account to create.</p>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Add your image</h3><p>Drag and drop a JPG, PNG, WebP or GIF into the box above, click to browse, or paste one straight from your clipboard.</p></div>
+      <div class="step"><div class="num">2</div><h3>Pick the new size</h3><p>Type exact width and height in pixels, drag the percentage slider, or tap a preset sized for Instagram, YouTube, X and more.</p></div>
+      <div class="step"><div class="num">3</div><h3>Download the result</h3><p>Choose PNG, JPG or WebP, check the new file size in the live preview, and download. The resized image is yours, watermark-free.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section class="block">
+    <div class="feat-row">
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+        <h3>Truly private</h3><p>Resizing happens on your own device with the browser canvas. Your photos never reach a server.</p>
+      </div>
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13.5H11L9.5 22 19 10h-6.5L13 2z"/></svg>
+        <h3>Fast, high quality</h3><p>Large images are scaled down in steps, which keeps edges smooth instead of jagged.</p>
+      </div>
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>
+        <h3>Exact pixels or percent</h3><p>Lock the aspect ratio and change one side, or unlock it to stretch to any custom size.</p>
+      </div>
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <h3>No limits that matter</h3><p>No daily cap, no queue, no watermark. Resize as many images as you like, one at a time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SIZE TABLE ================= -->
+  <section class="block">
+    <h2>Image sizes for social media</h2>
+    <p class="lead">The sizes platforms actually recommend. If you already have an image loaded above, use a row to apply its size instantly.</p>
+    <table class="size-table">
+      <thead><tr><th>Platform</th><th>Use</th><th>Size (px)</th><th></th></tr></thead>
+      <tbody>
+        <tr><td>Instagram</td><td>Square post</td><td class="mono">1080 × 1080</td><td><button type="button" data-apply="1080,1080">Use this size</button></td></tr>
+        <tr><td>Instagram</td><td>Portrait post</td><td class="mono">1080 × 1350</td><td><button type="button" data-apply="1080,1350">Use this size</button></td></tr>
+        <tr><td>Instagram</td><td>Story and Reels cover</td><td class="mono">1080 × 1920</td><td><button type="button" data-apply="1080,1920">Use this size</button></td></tr>
+        <tr><td>Facebook</td><td>Shared image and link preview</td><td class="mono">1200 × 630</td><td><button type="button" data-apply="1200,630">Use this size</button></td></tr>
+        <tr><td>X (Twitter)</td><td>Post image</td><td class="mono">1600 × 900</td><td><button type="button" data-apply="1600,900">Use this size</button></td></tr>
+        <tr><td>YouTube</td><td>Video thumbnail</td><td class="mono">1280 × 720</td><td><button type="button" data-apply="1280,720">Use this size</button></td></tr>
+        <tr><td>LinkedIn</td><td>Post image</td><td class="mono">1200 × 627</td><td><button type="button" data-apply="1200,627">Use this size</button></td></tr>
+        <tr><td>Pinterest</td><td>Standard pin</td><td class="mono">1000 × 1500</td><td><button type="button" data-apply="1000,1500">Use this size</button></td></tr>
+        <tr><td>WhatsApp</td><td>Status</td><td class="mono">1080 × 1920</td><td><button type="button" data-apply="1080,1920">Use this size</button></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="block faq">
+    <h2>Frequently asked questions</h2>
+    <p class="lead" style="margin-bottom:20px">Quick answers about resizing images with this tool.</p>
+    <details>
+      <summary>Is this image resizer really free?</summary>
+      <div class="a"><p>Yes. There is no signup, no watermark, no daily limit and nothing to install. It is one of the free tools on FreeToolBox, supported by the site itself rather than by charging you per image.</p></div>
+    </details>
+    <details>
+      <summary>Are my images uploaded to a server?</summary>
+      <div class="a"><p>No. The resizing is done by your own browser using the HTML canvas, on your device. Your image is never sent anywhere, which also means it works on private or personal photos safely.</p></div>
+    </details>
+    <details>
+      <summary>Will resizing reduce the quality of my image?</summary>
+      <div class="a"><p>Making an image smaller keeps it sharp — this tool scales in steps for smoother results. Making an image much larger than the original can look soft, because no resizer can invent detail that was never there. For JPG and WebP you control the quality slider yourself.</p></div>
+    </details>
+    <details>
+      <summary>What is the difference between resizing by pixels and by percentage?</summary>
+      <div class="a"><p>Pixels give you an exact final size, which is what social platforms and websites ask for. Percentage is quicker when you just want the image half as big or twice as big without caring about the exact numbers. Both do the same job — the percentage slider simply works out the pixels for you.</p></div>
+    </details>
+    <details>
+      <summary>Why does my PNG become a white background when I choose JPG?</summary>
+      <div class="a"><p>JPG does not support transparency, so transparent areas have to be filled with a solid color. The default is white, and you can pick any other background color in the format section before downloading.</p></div>
+    </details>
+    <details>
+      <summary>What is the best size for an Instagram post?</summary>
+      <div class="a"><p>1080 × 1080 pixels for a square post, 1080 × 1350 for a portrait post, and 1080 × 1920 for Stories and Reels covers. All three are one tap away in the presets and the size table above.</p></div>
+    </details>
+  </section>
+
+  <!-- ================= MORE TOOLS ================= -->
+  <section class="block">
+    <h2>More free tools</h2>
+    <p class="lead">Other FreeToolBox tools that pair well with this one.</p>
+    <div class="more-tools">
+      <a class="tool-card" href="https://freetoolbox.tech/">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="9" cy="8" r="1.6"/></svg></span>
+        <span><h3>Background Remover</h3><p>Remove the background from any photo automatically and download a transparent PNG.</p></span>
+      </a>
+      <a class="tool-card" href="https://freetoolbox.tech/image-compressor/">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v4a2 2 0 01-2 2H3M16 3v4a2 2 0 002 2h3M8 21v-4a2 2 0 00-2-2H3M16 21v-4a2 2 0 012-2h3"/></svg></span>
+        <span><h3>Image Compressor</h3><p>Shrink JPG, PNG and WebP file sizes for faster websites and easier sharing, without visible quality loss.</p></span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>FreeToolBox — free online tools that run in your browser.</span>
+    <nav>
+      <a href="https://freetoolbox.tech/">Background Remover</a>
+      <a href="https://freetoolbox.tech/image-compressor/">Image Compressor</a>
+      <a href="https://freetoolbox.tech/blog/">Blog</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var dropzone = document.getElementById('dropzone');
+  var fileInput = document.getElementById('fileInput');
+  var dzError = document.getElementById('dzError');
+  var editor = document.getElementById('editor');
+  var fileThumb = document.getElementById('fileThumb');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var previewImg = document.getElementById('previewImg');
+  var dimBadge = document.getElementById('dimBadge');
+  var origDimsEl = document.getElementById('origDims');
+  var origSizeEl = document.getElementById('origSize');
+  var newDimsEl = document.getElementById('newDims');
+  var newSizeEl = document.getElementById('newSize');
+  var saveBadge = document.getElementById('saveBadge');
+  var widthInput = document.getElementById('widthInput');
+  var heightInput = document.getElementById('heightInput');
+  var lockBtn = document.getElementById('lockBtn');
+  var lockIcon = document.getElementById('lockIcon');
+  var aspectNote = document.getElementById('aspectNote');
+  var pctRange = document.getElementById('pctRange');
+  var pctVal = document.getElementById('pctVal');
+  var pctRow = document.getElementById('pctRow');
+  var presetGrid = document.getElementById('presetGrid');
+  var formatSeg = document.getElementById('formatSeg');
+  var qualityRange = document.getElementById('qualityRange');
+  var qualityVal = document.getElementById('qualityVal');
+  var qualityWrap = document.getElementById('qualityWrap');
+  var bgRow = document.getElementById('bgRow');
+  var bgColor = document.getElementById('bgColor');
+  var downloadBtn = document.getElementById('downloadBtn');
+  var downloadLabel = document.getElementById('downloadLabel');
+  var newImageBtn = document.getElementById('newImageBtn');
+
+  var state = {
+    img: null,            // HTMLImageElement (original)
+    srcUrl: null,         // object URL of original
+    origW: 0, origH: 0,
+    origBytes: 0,
+    fileName: 'image',
+    locked: true,
+    format: 'image/jpeg',
+    outBlob: null,
+    outUrl: null,
+    renderToken: 0
+  };
+
+  function fmtBytes(b){
+    if (!b && b !== 0) return '—';
+    if (b < 1024) return b + ' B';
+    if (b < 1024*1024) return (b/1024).toFixed(1) + ' KB';
+    return (b/(1024*1024)).toFixed(2) + ' MB';
+  }
+  function clampDim(v){ v = Math.round(v); if (isNaN(v) || v < 1) v = 1; if (v > 12000) v = 12000; return v; }
+  function extFor(fmt){ return fmt === 'image/png' ? 'png' : (fmt === 'image/webp' ? 'webp' : 'jpg'); }
+
+  /* ---------- Loading an image ---------- */
+  function showError(msg){
+    dzError.textContent = msg;
+    dzError.style.display = 'block';
+  }
+  function clearError(){ dzError.style.display = 'none'; }
+
+  function loadFile(file){
+    clearError();
+    if (!file) return;
+    if (file.type && file.type.indexOf('image/') !== 0){
+      showError('That file is not an image. Please choose a JPG, PNG, WebP or GIF file.');
+      return;
+    }
+    var url = URL.createObjectURL(file);
+    var img = new Image();
+    img.onload = function(){
+      if (state.srcUrl) URL.revokeObjectURL(state.srcUrl);
+      state.srcUrl = url;
+      state.img = img;
+      state.origW = img.naturalWidth;
+      state.origH = img.naturalHeight;
+      state.origBytes = file.size || 0;
+      var name = file.name || 'image';
+      state.fileName = name.replace(/\.[^.]+$/, '') || 'image';
+
+      fileThumb.src = url;
+      fileNameEl.textContent = name;
+      fileMetaEl.textContent = state.origW + ' × ' + state.origH + ' px · ' + fmtBytes(state.origBytes);
+      origDimsEl.textContent = state.origW + ' × ' + state.origH;
+      origSizeEl.textContent = fmtBytes(state.origBytes);
+
+      dropzone.style.display = 'none';
+      editor.classList.add('on');
+
+      setDims(state.origW, state.origH, 'init');
+      markPreset();
+      updateFormatUI();
+      render();
+      editor.scrollIntoView({behavior:'smooth', block:'start'});
+    };
+    img.onerror = function(){
+      URL.revokeObjectURL(url);
+      showError('This image could not be read. Try a different file — some formats (like certain HEIC or TIFF files) are not supported by browsers.');
+    };
+    img.src = url;
+  }
+
+  dropzone.addEventListener('click', function(){ fileInput.click(); });
+  dropzone.addEventListener('keydown', function(e){
+    if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fileInput.click(); }
+  });
+  fileInput.addEventListener('change', function(){
+    if (fileInput.files && fileInput.files[0]) loadFile(fileInput.files[0]);
+    fileInput.value = '';
+  });
+  ['dragenter','dragover'].forEach(function(ev){
+    dropzone.addEventListener(ev, function(e){ e.preventDefault(); dropzone.classList.add('dragging'); });
+  });
+  ['dragleave','drop'].forEach(function(ev){
+    dropzone.addEventListener(ev, function(e){ e.preventDefault(); dropzone.classList.remove('dragging'); });
+  });
+  dropzone.addEventListener('drop', function(e){
+    var dt = e.dataTransfer;
+    if (dt && dt.files && dt.files[0]) loadFile(dt.files[0]);
+  });
+  document.addEventListener('paste', function(e){
+    if (editor.classList.contains('on')) return;
+    var items = (e.clipboardData || {}).items || [];
+    for (var i = 0; i < items.length; i++){
+      if (items[i].type && items[i].type.indexOf('image/') === 0){
+        var f = items[i].getAsFile();
+        if (f) loadFile(f);
+        break;
+      }
+    }
+  });
+
+  newImageBtn.addEventListener('click', function(){
+    editor.classList.remove('on');
+    dropzone.style.display = '';
+    if (state.outUrl){ URL.revokeObjectURL(state.outUrl); state.outUrl = null; }
+    document.getElementById('tool').scrollIntoView({behavior:'smooth', block:'start'});
+  });
+
+  /* ---------- Dimension logic ---------- */
+  function currentW(){ return clampDim(parseFloat(widthInput.value)); }
+  function currentH(){ return clampDim(parseFloat(heightInput.value)); }
+
+  function setDims(w, h, source){
+    w = clampDim(w); h = clampDim(h);
+    widthInput.value = w;
+    heightInput.value = h;
+    syncPct(w);
+    if (source !== 'preset') markPreset();
+  }
+
+  function syncPct(w){
+    if (!state.origW) return;
+    var p = Math.round((w / state.origW) * 100);
+    if (p >= 5 && p <= 200){ pctRange.value = p; }
+    pctVal.textContent = p + '%';
+    var btns = pctRow.querySelectorAll('.pct-btn');
+    btns.forEach(function(b){ b.classList.toggle('active', parseInt(b.getAttribute('data-pct'),10) === p); });
+  }
+
+  widthInput.addEventListener('input', function(){
+    var w = parseFloat(widthInput.value);
+    if (!w || w < 1) return;
+    if (state.locked && state.origW){
+      heightInput.value = clampDim(w * state.origH / state.origW);
+    }
+    syncPct(clampDim(w));
+    markPreset();
+    scheduleRender();
+  });
+  heightInput.addEventListener('input', function(){
+    var h = parseFloat(heightInput.value);
+    if (!h || h < 1) return;
+    if (state.locked && state.origH){
+      var w = clampDim(h * state.origW / state.origH);
+      widthInput.value = w;
+      syncPct(w);
+    }
+    markPreset();
+    scheduleRender();
+  });
+  widthInput.addEventListener('change', function(){ setDims(currentW(), currentH()); render(); });
+  heightInput.addEventListener('change', function(){ setDims(currentW(), currentH()); render(); });
+
+  lockBtn.addEventListener('click', function(){
+    state.locked = !state.locked;
+    lockBtn.classList.toggle('locked', state.locked);
+    lockBtn.setAttribute('aria-pressed', state.locked ? 'true' : 'false');
+    lockIcon.innerHTML = state.locked
+      ? '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>'
+      : '<rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 017.5-2"/>';
+    if (state.locked){
+      aspectNote.innerHTML = 'Aspect ratio locked — the other side updates automatically.';
+      var w = currentW();
+      heightInput.value = clampDim(w * state.origH / state.origW);
+      render();
+    } else {
+      aspectNote.innerHTML = 'Aspect ratio <b>unlocked</b> — width and height can be set independently (the image may stretch).';
+    }
+  });
+
+  function applyPct(p){
+    if (!state.origW) return;
+    var w = clampDim(state.origW * p / 100);
+    var h = clampDim(state.origH * p / 100);
+    setDims(w, h, 'pct');
+    pctRange.value = Math.min(200, Math.max(5, p));
+    pctVal.textContent = p + '%';
+    markPreset();
+    render();
+  }
+  pctRange.addEventListener('input', function(){ applyPct(parseInt(pctRange.value, 10)); });
+  pctRow.addEventListener('click', function(e){
+    var b = e.target.closest('.pct-btn');
+    if (b) applyPct(parseInt(b.getAttribute('data-pct'), 10));
+  });
+
+  function markPreset(){
+    var w = widthInput.value, h = heightInput.value;
+    presetGrid.querySelectorAll('.preset-btn').forEach(function(b){
+      b.classList.toggle('active', b.getAttribute('data-w') === String(w) && b.getAttribute('data-h') === String(h));
+    });
+  }
+  presetGrid.addEventListener('click', function(e){
+    var b = e.target.closest('.preset-btn');
+    if (!b) return;
+    setDims(parseInt(b.getAttribute('data-w'),10), parseInt(b.getAttribute('data-h'),10), 'preset');
+    markPreset();
+    render();
+  });
+
+  /* Size table "Use this size" buttons */
+  document.querySelectorAll('[data-apply]').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var parts = btn.getAttribute('data-apply').split(',');
+      var w = parseInt(parts[0],10), h = parseInt(parts[1],10);
+      if (!editor.classList.contains('on')){
+        document.getElementById('tool').scrollIntoView({behavior:'smooth', block:'start'});
+        showError('Add an image first, then this size can be applied to it.');
+        return;
+      }
+      setDims(w, h, 'preset');
+      markPreset();
+      render();
+      document.getElementById('tool').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+
+  /* ---------- Format / quality ---------- */
+  formatSeg.addEventListener('click', function(e){
+    var b = e.target.closest('button[data-fmt]');
+    if (!b) return;
+    state.format = b.getAttribute('data-fmt');
+    formatSeg.querySelectorAll('button').forEach(function(x){ x.classList.toggle('active', x === b); });
+    updateFormatUI();
+    render();
+  });
+  function updateFormatUI(){
+    var isPng = state.format === 'image/png';
+    qualityWrap.style.display = isPng ? 'none' : '';
+    bgRow.classList.toggle('on', state.format === 'image/jpeg');
+  }
+  qualityRange.addEventListener('input', function(){
+    qualityVal.textContent = qualityRange.value + '%';
+    scheduleRender();
+  });
+  bgColor.addEventListener('input', scheduleRender);
+
+  /* ---------- Rendering (step-down for quality) ---------- */
+  var renderTimer = null;
+  function scheduleRender(){
+    if (renderTimer) clearTimeout(renderTimer);
+    renderTimer = setTimeout(render, 220);
+  }
+
+  function drawResized(targetW, targetH){
+    var src = state.img;
+    var sw = state.origW, sh = state.origH;
+    // Step-down: halve repeatedly until close to target, then final draw.
+    var cur = document.createElement('canvas');
+    cur.width = sw; cur.height = sh;
+    var cctx = cur.getContext('2d');
+    cctx.drawImage(src, 0, 0);
+
+    while (cur.width / 2 >= targetW && cur.height / 2 >= targetH && (cur.width > targetW * 2 || cur.height > targetH * 2)){
+      var next = document.createElement('canvas');
+      next.width = Math.max(targetW, Math.floor(cur.width / 2));
+      next.height = Math.max(targetH, Math.floor(cur.height / 2));
+      var nctx = next.getContext('2d');
+      nctx.imageSmoothingEnabled = true;
+      nctx.imageSmoothingQuality = 'high';
+      nctx.drawImage(cur, 0, 0, next.width, next.height);
+      cur = next;
+      if (cur.width === targetW && cur.height === targetH) break;
+    }
+
+    var out = document.createElement('canvas');
+    out.width = targetW; out.height = targetH;
+    var octx = out.getContext('2d');
+    octx.imageSmoothingEnabled = true;
+    octx.imageSmoothingQuality = 'high';
+    if (state.format === 'image/jpeg'){
+      octx.fillStyle = bgColor.value || '#ffffff';
+      octx.fillRect(0, 0, targetW, targetH);
+    }
+    octx.drawImage(cur, 0, 0, targetW, targetH);
+    return out;
+  }
+
+  function render(){
+    if (!state.img) return;
+    var w = currentW(), h = currentH();
+    var token = ++state.renderToken;
+    var canvas = drawResized(w, h);
+    var q = parseInt(qualityRange.value, 10) / 100;
+    canvas.toBlob(function(blob){
+      if (token !== state.renderToken || !blob) return;
+      if (state.outUrl) URL.revokeObjectURL(state.outUrl);
+      state.outBlob = blob;
+      state.outUrl = URL.createObjectURL(blob);
+      previewImg.src = state.outUrl;
+      dimBadge.textContent = w + ' × ' + h + ' px';
+      newDimsEl.textContent = w + ' × ' + h;
+      newSizeEl.textContent = fmtBytes(blob.size);
+      downloadLabel.textContent = 'Download resized image · ' + fmtBytes(blob.size);
+      if (state.origBytes){
+        var diff = blob.size - state.origBytes;
+        var pctChange = Math.abs(Math.round((diff / state.origBytes) * 100));
+        saveBadge.classList.add('on');
+        if (diff < 0){
+          saveBadge.classList.remove('neg');
+          saveBadge.textContent = 'File size reduced by ' + pctChange + '% — saves ' + fmtBytes(-diff);
+        } else if (diff > 0){
+          saveBadge.classList.add('neg');
+          saveBadge.textContent = 'File size grows by ' + pctChange + '% at this size and format.';
+        } else {
+          saveBadge.classList.remove('neg');
+          saveBadge.textContent = 'File size stays about the same.';
+        }
+      }
+    }, state.format, state.format === 'image/png' ? undefined : q);
+  }
+
+  /* ---------- Download ---------- */
+  downloadBtn.addEventListener('click', function(){
+    if (!state.img) return;
+    downloadBtn.disabled = true;
+    downloadLabel.textContent = 'Preparing…';
+    var w = currentW(), h = currentH();
+    var canvas = drawResized(w, h);
+    var q = parseInt(qualityRange.value, 10) / 100;
+    canvas.toBlob(function(blob){
+      downloadBtn.disabled = false;
+      downloadLabel.textContent = 'Download resized image' + (state.outBlob ? ' · ' + fmtBytes(state.outBlob.size) : '');
+      if (!blob) return;
+      var a = document.createElement('a');
+      var url = URL.createObjectURL(blob);
+      a.href = url;
+      a.download = state.fileName + '-' + w + 'x' + h + '.' + extFor(state.format);
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(function(){ URL.revokeObjectURL(url); }, 4000);
+    }, state.format, state.format === 'image/png' ? undefined : q);
+  });
+})();
+</script>
+</body>
+</html>
