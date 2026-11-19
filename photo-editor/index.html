@@ -722,10 +722,22 @@
   document.getElementById('filterGrid').addEventListener('click', function(e){
     var b = e.target.closest('.filter-btn');
     if (!b || !img) return;
+    if (b.classList.contains('active')) return;
     var preset = FILTERS[b.getAttribute('data-filter')];
     if (!preset) return;
-    adj = {};
-    Object.keys(defaults()).forEach(function(k){ adj[k] = preset[k]; });
+    var base = defaults();
+    var sliderByKey = {};
+    sliders.forEach(function(s){ sliderByKey[s.key] = s; });
+    Object.keys(base).forEach(function(k){
+      if (sliderByKey[k]) {
+        var el = document.getElementById(sliderByKey[k].id);
+        var lo = parseInt(el.min, 10); if (isNaN(lo)) lo = 0;
+        var hi = parseInt(el.max, 10); if (isNaN(hi)) hi = 200;
+        adj[k] = Math.max(lo, Math.min(hi, adj[k] + (preset[k] - base[k])));
+      } else {
+        adj[k] = preset[k];
+      }
+    });
     syncSliders(); markFilter(b.getAttribute('data-filter')); requestPreview();
   });
 
