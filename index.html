@@ -415,9 +415,12 @@
       }
       .site-nav details.nav-drop .drop-menu a:hover { color: var(--ink); background: var(--surface-2); }
       .site-nav details.nav-drop .drop-menu a small { display: block; font-weight: 600; font-size: 12px; color: var(--muted); }
+      .site-nav details.nav-drop:not([open]) .drop-menu { display: none; }
       @media (max-width: 560px) {
         .site-nav details.nav-drop .drop-menu { left: auto; right: 0; }
       }
+
+      #tools .card + .card { margin-top: 16px; }
 
       footer { margin-top: 52px; border-top: 1px solid var(--line); padding: 26px 0 40px; }
       .foot-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
@@ -463,6 +466,7 @@
               <a href="/image-compressor/">Image Compressor<small>Tool 02 — shrink images</small></a>
               <a href="/image-resizer/">Image Resizer<small>Tool 03 — resize to any size</small></a>
               <a href="/image-upscaler/">Image Upscaler<small>Tool 04 — make images big and sharp</small></a>
+              <a href="/photo-editor/">Photo Editor<small>Tool 05 — edit photos free</small></a>
             </div>
           </details>
           <a href="#faq">FAQ</a>
@@ -622,6 +626,11 @@
           <p>Make small images big and sharp — upscale 2x or 4x, smooth grain and enhance colour and contrast — right in your browser, no sign-up, no watermark.</p>
           <a class="btn btn-accent" href="/image-upscaler/">Upscale images free</a>
         </div>
+        <div class="card">
+          <h3>Photo Editor</h3>
+          <p>Edit photos in your browser — crop, rotate and flip, adjust brightness, contrast and colour, and apply filters — no sign-up, no watermark.</p>
+          <a class="btn btn-accent" href="/photo-editor/">Edit photos free</a>
+        </div>
       </section>
 
 
@@ -637,6 +646,10 @@
           <a href="/remove-bg-alternative/" style="color:var(--ink-soft)">Remove BG Alternative</a>
           <a href="/make-logo-transparent/" style="color:var(--ink-soft)">Make Logo Transparent</a>
           <a href="/how-to-make-a-transparent-png/" style="color:var(--ink-soft)">How to Make a Transparent PNG</a>
+          <a href="/transparent-png-vs-jpg-vs-webp/" style="color:var(--ink-soft)">Transparent PNG vs JPG vs WebP</a>
+          <a href="/remove-background-from-product-photos/" style="color:var(--ink-soft)">Remove Background From Product Photos</a>
+          <a href="/remove-background-from-photo/" style="color:var(--ink-soft)">Remove Background From Photo</a>
+          <a href="/fix-rough-edges-after-background-removal/" style="color:var(--ink-soft)">Fix Rough Edges After Background Removal</a>
         </nav>
         <div class="foot-row">
           <p>Background removal runs on ONNX Runtime Web — entirely in your browser. The built-in U²-Net model and the runtime ship with this page, so processing never depends on a download; the larger open-source RMBG-1.4 model by BRIA AI is fetched in the background when your connection allows, and offered as an optional full-quality re-run.</p>
