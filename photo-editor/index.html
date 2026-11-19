@@ -1,0 +1,953 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="color-scheme" content="light dark" />
+<meta name="description" content="Edit photos online for free. Crop, rotate, adjust brightness and contrast, apply filters, enhance and resize, then download as PNG or JPG. No signup, no watermark, files never leave your browser." />
+<link rel="icon" href="data:," />
+<title>Photo Editor Online — Edit Photos Free | FreeToolBox</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf8f6; --bg-raise:#ffffff; --surface:#ffffff; --surface-2:#f4f1ed; --surface-3:#ede8e2;
+    --border:#e6ded4; --border-strong:#d8cec0; --text:#1c1710; --text-2:#57504a; --muted:#8a8178;
+    --accent:#e85d0c; --accent-hover:#d14f06; --accent-soft:#ffefe3; --accent-ink:#9a3d05;
+    --green:#15803d; --green-soft:#e8f6ec; --red:#dc2626; --checker:#e9e4dc;
+    --shadow:0 1px 2px rgba(28,23,16,.05),0 12px 32px -12px rgba(28,23,16,.14);
+    --shadow-lg:0 2px 4px rgba(28,23,16,.05),0 24px 48px -16px rgba(232,93,12,.18);
+    --radius:14px; --radius-sm:10px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#100e0b; --bg-raise:#171410; --surface:#1a1712; --surface-2:#221e18; --surface-3:#2b2620;
+      --border:#2e2a23; --border-strong:#3d372d; --text:#f5efe6; --text-2:#c9c0b2; --muted:#94897a;
+      --accent:#f97316; --accent-hover:#fb8b3c; --accent-soft:#2e1c0d; --accent-ink:#ffb37e;
+      --green:#4ade80; --green-soft:#12291a; --checker:#26221c;
+      --shadow:0 1px 2px rgba(0,0,0,.4),0 12px 32px -12px rgba(0,0,0,.5);
+      --shadow-lg:0 2px 4px rgba(0,0,0,.4),0 24px 48px -16px rgba(0,0,0,.6);
+    }
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;line-height:1.55;font-size:16px}
+  button,[role="button"],select,summary,input:not([type="checkbox"],[type="radio"]){min-height:2.25rem}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+  .mono{font-family:"JetBrains Mono",ui-monospace,monospace}
+
+  .topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .topbar-in{max-width:1160px;margin:0 auto;padding:0 20px;height:60px;display:flex;align-items:center;gap:16px}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;letter-spacing:-.02em;color:var(--text)}
+  .brand:hover{text-decoration:none}
+  .brand-mark{width:34px;height:34px;border-radius:9px;background:var(--accent);display:grid;place-items:center;flex:none;box-shadow:0 4px 12px -4px rgba(232,93,12,.55)}
+  .brand-mark svg{width:19px;height:19px;stroke:#fff}
+  .brand em{font-style:normal;color:var(--accent)}
+  .topnav{margin-left:auto;display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+  .topnav a{color:var(--text-2);font-size:14px;font-weight:600;padding:9px 12px;border-radius:8px;min-height:36px;display:inline-flex;align-items:center}
+  .topnav a:hover{color:var(--text);background:var(--surface-2);text-decoration:none}
+  .topnav a.active{color:var(--accent-ink);background:var(--accent-soft)}
+  @media (max-width:760px){
+    .topbar-in{height:auto;min-height:56px;padding-top:8px;padding-bottom:8px;flex-wrap:wrap;row-gap:2px}
+    .topnav{margin-left:0;width:100%;gap:2px}
+    .topnav a{padding:8px 7px;font-size:12.5px}
+    .brand{font-size:16px}
+  }
+  .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+
+  .intro{padding:44px 0 8px;text-align:center}
+  .intro h1{font-size:clamp(30px,5vw,46px);line-height:1.08;letter-spacing:-.03em;font-weight:800;margin:0 auto 14px;max-width:720px}
+  .intro h1 .hl{color:var(--accent)}
+  .intro p{color:var(--text-2);font-size:17px;max-width:600px;margin:0 auto}
+  .intro-meta{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:20px}
+  .chip{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:600;color:var(--text-2);background:var(--surface);border:1px solid var(--border);border-radius:999px;padding:7px 13px}
+  .chip svg{width:14px;height:14px;stroke:var(--green);flex:none}
+
+  .tool{margin:28px auto 0;background:var(--surface);border:1px solid var(--border);border-radius:20px;box-shadow:var(--shadow-lg);overflow:hidden}
+  .dropzone{padding:56px 28px;text-align:center;cursor:pointer;transition:background .15s}
+  .dropzone:hover{background:var(--surface-2)}
+  .dropzone.dragging{background:var(--accent-soft)}
+  .dz-icon{width:72px;height:72px;margin:0 auto 18px;border-radius:20px;background:var(--accent-soft);display:grid;place-items:center;border:1.5px dashed color-mix(in srgb,var(--accent) 45%,transparent)}
+  .dz-icon svg{width:32px;height:32px;stroke:var(--accent)}
+  .dropzone h2{margin:0 0 6px;font-size:21px;letter-spacing:-.01em}
+  .dropzone p{margin:0;color:var(--muted);font-size:14.5px}
+  .dz-btn{display:inline-flex;align-items:center;gap:8px;margin-top:20px;background:var(--accent);color:#fff;font-weight:700;font-size:15px;border:0;border-radius:11px;padding:13px 26px;cursor:pointer;min-height:48px;box-shadow:0 8px 20px -8px rgba(232,93,12,.6)}
+  .dz-btn:hover{background:var(--accent-hover)}
+  .dz-formats{margin-top:16px;font-size:12.5px;color:var(--muted);letter-spacing:.02em}
+  .dz-error{display:none;margin:18px auto 0;max-width:440px;background:#fef2f2;color:#b91c1c;border:1px solid #fecaca;border-radius:10px;padding:11px 14px;font-size:14px;font-weight:600}
+  @media (prefers-color-scheme: dark){ .dz-error{background:#2a1212;color:#fca5a5;border-color:#5b2323} }
+
+  .editor{display:none}
+  .editor.on{display:block}
+  .filebar{display:flex;align-items:center;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);background:var(--surface-2);flex-wrap:wrap}
+  .filebar .fname{font-weight:700;font-size:14px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .filebar .fmeta{font-size:12.5px;color:var(--muted)}
+  .filebar .spacer{flex:1}
+  .btn-ghost{display:inline-flex;align-items:center;gap:7px;background:var(--surface);border:1px solid var(--border-strong);color:var(--text);font-weight:600;font-size:13.5px;border-radius:9px;padding:9px 14px;cursor:pointer;min-height:38px;font-family:inherit}
+  .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+
+  .editor-grid{display:grid;grid-template-columns:1fr 380px;min-height:480px}
+  @media (max-width:900px){ .editor-grid{grid-template-columns:1fr} }
+  .preview-pane{padding:22px;display:flex;flex-direction:column;gap:16px;background:radial-gradient(circle at 1px 1px, var(--border) 1px, transparent 0);background-size:22px 22px;background-color:var(--bg-raise)}
+  .preview-stage{flex:1;display:grid;place-items:center;min-height:300px}
+  .preview-frame{position:relative;max-width:100%}
+  .preview-frame canvas{display:block;max-width:100%;max-height:430px;width:auto;height:auto;border-radius:6px;box-shadow:0 10px 34px -10px rgba(0,0,0,.35);background:repeating-conic-gradient(var(--checker) 0% 25%, transparent 0% 50%) 0 0/18px 18px}
+  .dim-badge{position:absolute;left:50%;bottom:-14px;transform:translateX(-50%);background:var(--text);color:var(--bg);font-size:12px;font-weight:600;padding:5px 12px;border-radius:999px;white-space:nowrap;box-shadow:var(--shadow)}
+  .compare-row{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+  .compare-row .box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 16px;text-align:center}
+  .compare-row .box .lbl{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+  .compare-row .box .val{font-size:15px;font-weight:800;margin-top:2px}
+  .hold-btn{user-select:none;-webkit-user-select:none;touch-action:none}
+  .hold-btn.holding{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .save-badge{display:none;text-align:center;font-size:13.5px;font-weight:700;color:var(--green);background:var(--green-soft);border-radius:9px;padding:9px 12px}
+  .save-badge.on{display:block}
+  .save-badge.neg{color:var(--accent-ink);background:var(--accent-soft)}
+
+  .controls{border-left:1px solid var(--border);padding:22px;display:flex;flex-direction:column;gap:22px;background:var(--surface)}
+  @media (max-width:900px){ .controls{border-left:0;border-top:1px solid var(--border)} }
+  .ctl-group h3{margin:0 0 11px;font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:8px}
+  .ctl-group h3 .right{margin-left:auto;text-transform:none;letter-spacing:0}
+  .ctl-group h3 .right button{background:none;border:0;color:var(--accent);font-weight:700;font-size:12.5px;cursor:pointer;padding:4px 2px;font-family:inherit;min-height:0}
+
+  .filter-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+  .filter-btn{border:1.5px solid var(--border);background:var(--surface);border-radius:10px;padding:8px 4px;cursor:pointer;font-family:inherit;min-height:52px}
+  .filter-btn:hover{border-color:var(--accent)}
+  .filter-btn.active{border-color:var(--accent);background:var(--accent-soft)}
+  .filter-btn .sw{width:100%;height:26px;border-radius:6px;margin-bottom:5px;background:linear-gradient(135deg,#f6d365,#fda085)}
+  .filter-btn .fn{display:block;font-weight:700;font-size:12px;color:var(--text);line-height:1.2}
+  .filter-btn[data-filter="original"] .sw{background:linear-gradient(135deg,#a8edea,#fed6e3)}
+  .filter-btn[data-filter="grayscale"] .sw{background:linear-gradient(135deg,#666,#ddd)}
+  .filter-btn[data-filter="sepia"] .sw{background:linear-gradient(135deg,#704214,#d9a05b)}
+  .filter-btn[data-filter="vivid"] .sw{background:linear-gradient(135deg,#ff0844,#ffb199)}
+  .filter-btn[data-filter="warm"] .sw{background:linear-gradient(135deg,#f83600,#f9d423)}
+  .filter-btn[data-filter="cool"] .sw{background:linear-gradient(135deg,#2193b0,#6dd5ed)}
+  .filter-btn[data-filter="bw"] .sw{background:linear-gradient(135deg,#000,#fff)}
+
+  .slider-row{margin-bottom:13px}
+  .slider-row:last-child{margin-bottom:0}
+  .slider-row .s-head{display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:5px}
+  .slider-row .s-head output{font-family:"JetBrains Mono",monospace;color:var(--text)}
+  .slider-row input[type="range"]{width:100%;accent-color:var(--accent);height:28px;min-height:28px;cursor:pointer}
+
+  .seg-row{display:flex;gap:6px;flex-wrap:wrap}
+  .seg-btn{flex:1;min-width:56px;padding:9px 6px;border:1.5px solid var(--border);background:var(--surface);border-radius:9px;font-weight:700;font-size:13px;cursor:pointer;color:var(--text-2);font-family:inherit;min-height:40px}
+  .seg-btn:hover{border-color:var(--accent);color:var(--accent)}
+  .seg-btn.active{border-color:var(--accent);background:var(--accent-soft);color:var(--accent-ink)}
+  .seg-btn.wide{flex:1 1 46%}
+  .ctl-note{font-size:12.5px;color:var(--muted);margin-top:8px}
+  .ctl-note b{color:var(--text-2)}
+
+  .dim-row{display:flex;align-items:flex-end;gap:8px}
+  .dim-field{flex:1}
+  .dim-field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:5px}
+  .dim-field input{width:100%;padding:10px 12px;border:1.5px solid var(--border-strong);border-radius:10px;background:var(--surface);color:var(--text);font-family:"JetBrains Mono",monospace;font-size:15px;font-weight:600}
+  .dim-field input:focus{border-color:var(--accent);outline:none}
+  .lock-btn{width:42px;height:44px;flex:none;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);cursor:pointer;display:grid;place-items:center;color:var(--muted);font-size:16px}
+  .lock-btn.locked{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+
+  .fmt-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
+  .fmt-field{flex:1;min-width:110px}
+  .fmt-field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:5px}
+  .fmt-field select{width:100%;padding:10px 12px;border:1.5px solid var(--border-strong);border-radius:10px;background:var(--surface);color:var(--text);font-size:14px;font-weight:600;font-family:inherit}
+  .btn-primary{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--accent);color:#fff;font-weight:700;font-size:15.5px;border:0;border-radius:11px;padding:14px 20px;cursor:pointer;min-height:50px;box-shadow:0 8px 20px -8px rgba(232,93,12,.6);font-family:inherit}
+  .btn-primary:hover{background:var(--accent-hover)}
+  .btn-primary:disabled{opacity:.6;cursor:wait}
+  .dl-note{font-size:12.5px;color:var(--muted);text-align:center;margin-top:9px}
+  .orig-dl{display:none;margin-top:9px;text-align:center}
+  .orig-dl.on{display:block}
+  .orig-dl button{background:none;border:0;color:var(--accent);font-weight:700;font-size:13.5px;cursor:pointer;font-family:inherit;text-decoration:underline;padding:4px}
+
+  section.block{padding:56px 0 0}
+  .block h2{font-size:clamp(23px,3.4vw,30px);letter-spacing:-.02em;margin:0 0 10px;font-weight:800}
+  .block .lead{color:var(--text-2);max-width:640px;margin:0 0 26px;font-size:16px}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  @media (max-width:760px){ .steps{grid-template-columns:1fr} }
+  .step{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+  .step .num{width:34px;height:34px;border-radius:10px;background:var(--accent-soft);color:var(--accent-ink);font-weight:800;display:grid;place-items:center;font-size:15px;margin-bottom:13px}
+  .step h3{margin:0 0 6px;font-size:16.5px}
+  .step p{margin:0;color:var(--text-2);font-size:14.5px}
+  .feat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media (max-width:900px){ .feat-row{grid-template-columns:1fr 1fr} }
+  @media (max-width:520px){ .feat-row{grid-template-columns:1fr} }
+  .feat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px}
+  .feat svg{width:26px;height:26px;stroke:var(--accent);margin-bottom:12px}
+  .feat h3{margin:0 0 6px;font-size:16px}
+  .feat p{margin:0;color:var(--text-2);font-size:14px}
+  .faq details{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:9px;overflow:hidden}
+  .faq summary{cursor:pointer;font-weight:700;font-size:15.5px;padding:16px 18px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:52px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-size:21px;color:var(--accent);font-weight:600;line-height:1;flex:none}
+  .faq details[open ] summary::after{content:"–"}
+  .faq .a{padding:0 18px 17px;color:var(--text-2);font-size:14.5px}
+  .faq .a p{margin:0}
+  .more-tools{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media (max-width:640px){ .more-tools{grid-template-columns:1fr} }
+  .tool-card{display:flex;gap:15px;align-items:flex-start;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;color:var(--text)}
+  .tool-card:hover{text-decoration:none;border-color:var(--accent)}
+  .tool-card .ic{width:46px;height:46px;border-radius:12px;background:var(--accent-soft);display:grid;place-items:center;flex:none}
+  .tool-card .ic svg{width:22px;height:22px;stroke:var(--accent)}
+  .tool-card h3{margin:0 0 4px;font-size:16px}
+  .tool-card p{margin:0;color:var(--text-2);font-size:13.5px}
+  footer{margin-top:64px;border-top:1px solid var(--border);padding:28px 0 40px;color:var(--muted);font-size:13.5px}
+  footer .wrap{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+  footer nav{margin-left:auto;display:flex;gap:16px;flex-wrap:wrap}
+  footer nav a{color:var(--muted)}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="https://freetoolbox.tech/">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>
+      </span>
+      Free<em>ToolBox</em>
+    </a>
+    <nav class="topnav" aria-label="Free tools">
+      <a href="https://freetoolbox.tech/">Background Remover</a>
+      <a href="https://freetoolbox.tech/image-compressor/">Image Compressor</a>
+      <a href="https://freetoolbox.tech/image-resizer/">Image Resizer</a>
+      <a href="#" class="active" aria-current="page">Photo Editor</a>
+      <a href="https://freetoolbox.tech/blog/">Blog</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <div class="intro">
+    <h1>Edit your photo online, <span class="hl">free</span></h1>
+    <p>Crop, rotate, fix the light and colour, try a filter and download the result. Your photo is edited right here in your browser — nothing is uploaded, ever.</p>
+    <div class="intro-meta">
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 100% free</span>
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> No signup</span>
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> No watermark</span>
+      <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> Private — stays on your device</span>
+    </div>
+  </div>
+
+  <!-- ================= TOOL ================= -->
+  <div class="tool" id="tool">
+
+    <!-- Upload state -->
+    <div class="dropzone" id="dropzone" role="button" tabindex="0" aria-label="Upload a photo to edit">
+      <div class="dz-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="9" cy="8" r="1.6"/></svg>
+      </div>
+      <h2>Drop your photo here</h2>
+      <p>Drag and drop a JPG, PNG or WebP file, click to browse, or paste one straight from your clipboard.</p>
+      <button type="button" class="dz-btn" id="browseBtn">Choose a photo</button>
+      <div class="dz-formats">JPG, PNG or WebP · up to 25 MB · edited on your device</div>
+      <div class="dz-error" id="dzError" role="alert"></div>
+      <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp" hidden />
+    </div>
+
+    <!-- Editor state -->
+    <div class="editor" id="editor">
+      <div class="filebar">
+        <span class="fname" id="fileName">photo</span>
+        <span class="fmeta" id="fileMeta"></span>
+        <span class="spacer"></span>
+        <button type="button" class="btn-ghost" id="newPhotoBtn">New photo</button>
+        <button type="button" class="btn-ghost" id="resetBtn">Reset edits</button>
+      </div>
+
+      <div class="editor-grid">
+        <div class="preview-pane">
+          <div class="preview-stage">
+            <div class="preview-frame">
+              <canvas id="previewCanvas" aria-label="Photo preview"></canvas>
+              <span class="dim-badge" id="dimBadge"></span>
+            </div>
+          </div>
+          <div class="compare-row">
+            <div class="box"><div class="lbl">Original size</div><div class="val" id="origSizeVal">—</div></div>
+            <div class="box"><div class="lbl">Edited size</div><div class="val" id="editSizeVal">—</div></div>
+            <button type="button" class="btn-ghost hold-btn" id="holdOriginalBtn">Hold to see original</button>
+          </div>
+          <div class="save-badge" id="saveBadge"></div>
+        </div>
+
+        <div class="controls">
+          <div class="ctl-group">
+            <h3>Filters</h3>
+            <div class="filter-grid" id="filterGrid">
+              <button type="button" class="filter-btn active" data-filter="original"><span class="sw"></span><span class="fn">Original</span></button>
+              <button type="button" class="filter-btn" data-filter="grayscale"><span class="sw"></span><span class="fn">Grayscale</span></button>
+              <button type="button" class="filter-btn" data-filter="sepia"><span class="sw"></span><span class="fn">Sepia</span></button>
+              <button type="button" class="filter-btn" data-filter="vivid"><span class="sw"></span><span class="fn">Vivid</span></button>
+              <button type="button" class="filter-btn" data-filter="warm"><span class="sw"></span><span class="fn">Warm</span></button>
+              <button type="button" class="filter-btn" data-filter="cool"><span class="sw"></span><span class="fn">Cool</span></button>
+              <button type="button" class="filter-btn" data-filter="bw"><span class="sw"></span><span class="fn">Black and white</span></button>
+              <button type="button" class="filter-btn" data-filter="enhance"><span class="sw"></span><span class="fn">Auto enhance</span></button>
+            </div>
+          </div>
+
+          <div class="ctl-group">
+            <h3>Adjust <span class="right"><button type="button" id="resetAdjustBtn">Reset</button></span></h3>
+            <div class="slider-row"><div class="s-head"><label for="slBrightness">Brightness</label><output id="outBrightness">100%</output></div><input type="range" id="slBrightness" min="50" max="150" value="100" /></div>
+            <div class="slider-row"><div class="s-head"><label for="slContrast">Contrast</label><output id="outContrast">100%</output></div><input type="range" id="slContrast" min="50" max="150" value="100" /></div>
+            <div class="slider-row"><div class="s-head"><label for="slSaturation">Colour</label><output id="outSaturation">100%</output></div><input type="range" id="slSaturation" min="0" max="200" value="100" /></div>
+            <div class="slider-row"><div class="s-head"><label for="slWarmth">Warmth</label><output id="outWarmth">0</output></div><input type="range" id="slWarmth" min="-50" max="50" value="0" /></div>
+            <div class="slider-row"><div class="s-head"><label for="slSharpness">Sharpness</label><output id="outSharpness">0%</output></div><input type="range" id="slSharpness" min="0" max="100" value="0" /></div>
+          </div>
+
+          <div class="ctl-group">
+            <h3>Crop and rotate</h3>
+            <div class="seg-row" id="cropRow">
+              <button type="button" class="seg-btn active" data-crop="free">Free</button>
+              <button type="button" class="seg-btn" data-crop="1">Square</button>
+              <button type="button" class="seg-btn" data-crop="1.3333">4 to 3</button>
+              <button type="button" class="seg-btn" data-crop="1.7778">16 to 9</button>
+              <button type="button" class="seg-btn" data-crop="1.5">3 to 2</button>
+            </div>
+            <p class="ctl-note">Crop is centred on your photo. Pick a shape, then fine-tune the size below.</p>
+            <div class="seg-row" style="margin-top:10px">
+              <button type="button" class="seg-btn wide" id="rotateLeftBtn">Rotate left</button>
+              <button type="button" class="seg-btn wide" id="rotateRightBtn">Rotate right</button>
+              <button type="button" class="seg-btn wide" id="flipHBtn">Flip sideways</button>
+              <button type="button" class="seg-btn wide" id="flipVBtn">Flip up and down</button>
+            </div>
+          </div>
+
+          <div class="ctl-group">
+            <h3>Resize</h3>
+            <div class="dim-row">
+              <div class="dim-field"><label for="outWidth">Width (px)</label><input type="number" id="outWidth" min="16" max="8000" /></div>
+              <div class="dim-field"><label for="outHeight">Height (px)</label><input type="number" id="outHeight" min="16" max="8000" /></div>
+              <button type="button" class="lock-btn locked" id="lockBtn" aria-label="Lock aspect ratio" title="Lock aspect ratio">🔒</button>
+            </div>
+            <div class="seg-row" style="margin-top:10px" id="pctRow">
+              <button type="button" class="seg-btn" data-pct="25">25%</button>
+              <button type="button" class="seg-btn" data-pct="50">50%</button>
+              <button type="button" class="seg-btn" data-pct="75">75%</button>
+              <button type="button" class="seg-btn active" data-pct="100">100%</button>
+            </div>
+            <p class="ctl-note">Resize keeps the edited photo sharp. <b id="resizeNote">Full size</b></p>
+          </div>
+
+          <div class="ctl-group">
+            <h3>Download</h3>
+            <div class="fmt-row">
+              <div class="fmt-field"><label for="fmtSelect">Format</label>
+                <select id="fmtSelect"><option value="png">PNG</option><option value="jpeg" selected>JPG</option><option value="webp">WebP</option></select>
+              </div>
+              <div class="fmt-field" id="qualityField"><label for="qualityRange">Quality</label>
+                <select id="qualityRange"><option value="0.92" selected>High (92%)</option><option value="0.8">Medium (80%)</option><option value="0.65">Smaller file (65%)</option></select>
+              </div>
+            </div>
+            <div style="margin-top:14px">
+              <button type="button" class="btn-primary" id="downloadBtn">Download edited photo</button>
+              <p class="dl-note" id="dlNote">JPG does not keep transparency. Pick PNG if your photo has a transparent background.</p>
+              <div class="orig-dl" id="origDl"><button type="button" id="downloadOrigBtn">Download the original instead — it is smaller</button></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HOW TO ================= -->
+  <section class="block">
+    <h2>How to edit a photo online</h2>
+    <p class="lead">Three steps, no software to install and no account to create.</p>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h3>Add your photo</h3><p>Drag and drop a JPG, PNG or WebP file into the box above, click to browse, or paste one straight from your clipboard.</p></div>
+      <div class="step"><div class="num">2</div><h3>Edit it your way</h3><p>Crop to the shape you need, fix brightness and colour with the sliders, try a filter, or tap Auto enhance for a quick lift.</p></div>
+      <div class="step"><div class="num">3</div><h3>Download the result</h3><p>Pick PNG, JPG or WebP, check the new file size in the live preview, and download. The edited photo is yours, watermark-free.</p></div>
+    </div>
+  </section>
+
+  <!-- ================= FEATURES ================= -->
+  <section class="block">
+    <div class="feat-row">
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg>
+        <h3>Truly private</h3><p>Editing happens on your own device with the browser canvas. Your photos never reach a server.</p>
+      </div>
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13.5H11L9.5 22 19 10h-6.5L13 2z"/></svg>
+        <h3>Fast, full quality</h3><p>Adjustments render live as you drag a slider, and the download uses your photo at full resolution.</p>
+      </div>
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg>
+        <h3>Crop, rotate and resize</h3><p>Square and widescreen crops, one-tap rotation, flips and exact pixel sizes for posts and profiles.</p>
+      </div>
+      <div class="feat">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        <h3>No limits that matter</h3><p>No daily cap, no queue, no watermark. Edit as many photos as you like, one at a time.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section class="block faq">
+    <h2>Frequently asked questions</h2>
+    <p class="lead" style="margin-bottom:20px">Quick answers about editing photos with this tool.</p>
+    <details>
+      <summary>Is this photo editor really free?</summary>
+      <div class="a"><p>Yes. There is no signup, no watermark, no daily limit and nothing to install. It is one of the free tools on FreeToolBox, supported by the site itself rather than by charging you per photo.</p></div>
+    </details>
+    <details>
+      <summary>Are my photos uploaded to a server?</summary>
+      <div class="a"><p>No. The editing is done by your own browser using the HTML canvas, on your device. Your photo is never sent anywhere, which also means it works on private or personal photos safely.</p></div>
+    </details>
+    <details>
+      <summary>What does Auto enhance do?</summary>
+      <div class="a"><p>It applies a balanced lift: a little more brightness and contrast, a touch more colour, gentle warmth and light sharpening. It is a fixed recipe, not artificial intelligence, so the result is predictable. You can still move any slider after it to fine-tune the photo.</p></div>
+    </details>
+    <details>
+      <summary>Will editing reduce the quality of my photo?</summary>
+      <div class="a"><p>Edits are applied once, at download time, from your original photo — sliders do not stack damage on top of each other. PNG downloads are lossless. JPG uses the quality you pick, and WebP gives small files with very little visible loss.</p></div>
+    </details>
+    <details>
+      <summary>Can I crop a photo to a square for a profile picture?</summary>
+      <div class="a"><p>Yes. Pick Square in the crop section and the photo is cropped to the middle square. Then set the size to 1080 by 1080 pixels if you want a crisp profile photo, and download as PNG or JPG.</p></div>
+    </details>
+    <details>
+      <summary>Why is my edited file bigger than the original?</summary>
+      <div class="a"><p>Editing can add detail back into a heavily compressed photo, so the new file can grow. If that happens, this tool tells you and offers the original file for download instead, so you never get a bigger file by surprise.</p></div>
+    </details>
+  </section>
+
+  <!-- ================= MORE TOOLS ================= -->
+  <section class="block">
+    <h2>More free tools</h2>
+    <p class="lead">Other FreeToolBox tools that pair well with this one.</p>
+    <div class="more-tools">
+      <a class="tool-card" href="https://freetoolbox.tech/">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M3 15l5-5 4 4 3-3 6 6"/><circle cx="9" cy="8" r="1.6"/></svg></span>
+        <span><h3>Background Remover</h3><p>Remove the background from any photo automatically and download a transparent PNG.</p></span>
+      </a>
+      <a class="tool-card" href="https://freetoolbox.tech/image-resizer/">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7.5 7.5M3 21l7.5-7.5"/></svg></span>
+        <span><h3>Image Resizer</h3><p>Set exact pixel dimensions or pick a ready-made social media size for any image.</p></span>
+      </a>
+      <a class="tool-card" href="https://freetoolbox.tech/image-compressor/">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v4a2 2 0 01-2 2H3M16 3v4a2 2 0 002 2h3M8 21v-4a2 2 0 00-2-2H3M16 21v-4a2 2 0 012-2h3"/></svg></span>
+        <span><h3>Image Compressor</h3><p>Shrink JPG, PNG and WebP file sizes for faster websites and easier sharing, without visible quality loss.</p></span>
+      </a>
+      <a class="tool-card" href="https://freetoolbox.tech/image-upscaler/">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M18.4 5.6l-2.1 2.1M7.7 16.3l-2.1 2.1"/><circle cx="12" cy="12" r="3.2"/></svg></span>
+        <span><h3>Image Upscaler</h3><p>Make a small photo bigger at 2x or 4x with sharpening, for prints and crisp screens.</p></span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>FreeToolBox — free online tools that run in your browser.</span>
+    <nav>
+      <a href="https://freetoolbox.tech/">Background Remover</a>
+      <a href="https://freetoolbox.tech/image-compressor/">Image Compressor</a>
+      <a href="https://freetoolbox.tech/image-resizer/">Image Resizer</a>
+      <a href="https://freetoolbox.tech/blog/">Blog</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var MAX_FILE = 25 * 1024 * 1024;
+  var PREVIEW_MAX = 1100;
+
+  var dropzone = document.getElementById('dropzone');
+  var fileInput = document.getElementById('fileInput');
+  var browseBtn = document.getElementById('browseBtn');
+  var dzError = document.getElementById('dzError');
+  var editor = document.getElementById('editor');
+  var fileNameEl = document.getElementById('fileName');
+  var fileMetaEl = document.getElementById('fileMeta');
+  var newPhotoBtn = document.getElementById('newPhotoBtn');
+  var resetBtn = document.getElementById('resetBtn');
+  var previewCanvas = document.getElementById('previewCanvas');
+  var pctx = previewCanvas.getContext('2d');
+  var dimBadge = document.getElementById('dimBadge');
+  var origSizeVal = document.getElementById('origSizeVal');
+  var editSizeVal = document.getElementById('editSizeVal');
+  var saveBadge = document.getElementById('saveBadge');
+  var holdBtn = document.getElementById('holdOriginalBtn');
+  var downloadBtn = document.getElementById('downloadBtn');
+  var downloadOrigBtn = document.getElementById('downloadOrigBtn');
+  var origDl = document.getElementById('origDl');
+  var dlNote = document.getElementById('dlNote');
+  var fmtSelect = document.getElementById('fmtSelect');
+  var qualityField = document.getElementById('qualityField');
+  var qualityRange = document.getElementById('qualityRange');
+  var outWidthEl = document.getElementById('outWidth');
+  var outHeightEl = document.getElementById('outHeight');
+  var lockBtn = document.getElementById('lockBtn');
+  var resizeNote = document.getElementById('resizeNote');
+
+  var img = null;            // loaded Image
+  var file = null;           // original File
+  var objectUrl = null;
+  var adj = defaults();
+  var rotateDeg = 0;
+  var flipH = false, flipV = false;
+  var cropRatio = null;     // null = free, else width / height
+  var outScale = 100;
+  var outW = 0, outH = 0;   // explicit output size in px (honours unlocked resize)
+  var lockAspect = true;
+  var showingOriginal = false;
+  var rafPending = false;
+  var estimateTimer = null;
+
+  function defaults(){
+    return { brightness:100, contrast:100, saturation:100, warmth:0, sharpness:0, grayscale:0, sepia:0, hue:0 };
+  }
+
+  function fmtBytes(n){
+    if (n == null || isNaN(n)) return "—";
+    if (n < 1024) return n + " B";
+    if (n < 1024*1024) return (n/1024).toFixed(n < 10240 ? 1 : 0) + " KB";
+    return (n/(1024*1024)).toFixed(2) + " MB";
+  }
+
+  function showError(msg){
+    dzError.textContent = msg;
+    dzError.style.display = 'block';
+  }
+  function hideError(){ dzError.style.display = 'none'; }
+
+  /* ---------- geometry ---------- */
+
+  // Centred crop rectangle in source pixels.
+  function cropRect(){
+    var sw = img.naturalWidth, sh = img.naturalHeight;
+    if (!cropRatio) return { x:0, y:0, w:sw, h:sh };
+    var target = cropRatio, cur = sw / sh, w, h;
+    if (cur > target){ h = sh; w = Math.round(sh * target); }
+    else { w = sw; h = Math.round(sw / target); }
+    return { x:Math.round((sw - w)/2), y:Math.round((sh - h)/2), w:w, h:h };
+  }
+
+  // Dimensions after crop and rotation, before the resize scale.
+  function baseDims(){
+    var r = cropRect();
+    var w = r.w, h = r.h;
+    if (rotateDeg === 90 || rotateDeg === 270){ var t = w; w = h; h = t; }
+    return { w:w, h:h };
+  }
+
+  function outDims(){
+    return { w:Math.max(16, outW || 16), h:Math.max(16, outH || 16) };
+  }
+
+  // Reset the output size to the edited photo at full size.
+  function resetOutSize(){
+    var b = baseDims();
+    outW = b.w; outH = b.h; outScale = 100;
+    document.querySelectorAll('#pctRow .seg-btn').forEach(function(x){
+      x.classList.toggle('active', x.getAttribute('data-pct') === '100');
+    });
+  }
+
+  /* ---------- rendering ---------- */
+
+  function filterString(){
+    var sepia = adj.sepia + Math.max(0, adj.warmth) * 0.5;
+    var hue = adj.hue + (adj.warmth < 0 ? -8 : 0);
+    var sat = adj.saturation + Math.max(0, adj.warmth) * 0.4;
+    var parts = [];
+    parts.push('brightness(' + adj.brightness + '%)');
+    parts.push('contrast(' + adj.contrast + '%)');
+    parts.push('saturate(' + sat + '%)');
+    if (adj.grayscale) parts.push('grayscale(' + adj.grayscale + '%)');
+    if (sepia) parts.push('sepia(' + Math.min(100, sepia) + '%)');
+    if (hue) parts.push('hue-rotate(' + hue + 'deg)');
+    return parts.join(' ');
+  }
+
+  function drawEdited(ctx, cw, ch){
+    var r = cropRect();
+    ctx.save();
+    ctx.clearRect(0, 0, cw, ch);
+    try { ctx.filter = filterString(); } catch(e){}
+    ctx.translate(cw/2, ch/2);
+    ctx.rotate(rotateDeg * Math.PI / 180);
+    ctx.scale(flipH ? -1 : 1, flipV ? -1 : 1);
+    var dw = (rotateDeg === 90 || rotateDeg === 270) ? ch : cw;
+    var dh = (rotateDeg === 90 || rotateDeg === 270) ? cw : ch;
+    ctx.drawImage(img, r.x, r.y, r.w, r.h, -dw/2, -dh/2, dw, dh);
+    ctx.restore();
+    try { ctx.filter = 'none'; } catch(e){}
+    if (adj.sharpness > 0) applySharpen(ctx, cw, ch, adj.sharpness / 100);
+  }
+
+  function applySharpen(ctx, w, h, amount){
+    if (w * h > 20000000) return; // skip on very large exports, still fast enough elsewhere
+    var src = ctx.getImageData(0, 0, w, h);
+    var d = src.data, out = ctx.createImageData(w, h), o = out.data;
+    var c = 1 + 4 * amount, n = -amount;
+    var idx = function(x, y){ return (y * w + x) * 4; };
+    for (var y = 0; y < h; y++){
+      for (var x = 0; x < w; x++){
+        for (var k = 0; k < 3; k++){
+          var v = d[idx(x,y)+k] * c;
+          if (x > 0) v += d[idx(x-1,y)+k] * n;
+          if (x < w-1) v += d[idx(x+1,y)+k] * n;
+          if (y > 0) v += d[idx(x,y-1)+k] * n;
+          if (y < h-1) v += d[idx(x,y+1)+k] * n;
+          o[idx(x,y)+k] = v < 0 ? 0 : v > 255 ? 255 : v;
+        }
+        o[idx(x,y)+3] = d[idx(x,y)+3];
+      }
+    }
+    ctx.putImageData(out, 0, 0);
+  }
+
+  // Render the edited photo into a canvas sized to fit maxDim (keeping aspect).
+  // Uses the chosen output size, so the preview matches the download.
+  function renderTo(canvas, maxDim){
+    var b = outDims();
+    var scale = Math.min(1, maxDim / Math.max(b.w, b.h));
+    var cw = Math.max(1, Math.round(b.w * scale));
+    var ch = Math.max(1, Math.round(b.h * scale));
+    canvas.width = cw; canvas.height = ch;
+    var ctx = canvas.getContext('2d');
+    drawEdited(ctx, cw, ch);
+    return { w:cw, h:ch };
+  }
+
+  function renderOriginal(canvas, maxDim){
+    var scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+    var cw = Math.max(1, Math.round(img.naturalWidth * scale));
+    var ch = Math.max(1, Math.round(img.naturalHeight * scale));
+    canvas.width = cw; canvas.height = ch;
+    var ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0, cw, ch);
+  }
+
+  function renderPreview(){
+    if (!img) return;
+    if (showingOriginal) renderOriginal(previewCanvas, PREVIEW_MAX);
+    else renderTo(previewCanvas, PREVIEW_MAX);
+    var d = outDims();
+    dimBadge.textContent = d.w + " × " + d.h + " px";
+    scheduleEstimate();
+  }
+
+  function requestPreview(){
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(function(){ rafPending = false; renderPreview(); });
+  }
+
+  function scheduleEstimate(){
+    if (estimateTimer) clearTimeout(estimateTimer);
+    estimateTimer = setTimeout(updateEstimate, 500);
+  }
+
+  function updateEstimate(){
+    if (!img || showingOriginal) return;
+    var c = document.createElement('canvas');
+    var d = renderTo(c, 1200);
+    var type = fmtSelect.value === 'png' ? 'image/png' : 'image/' + fmtSelect.value;
+    var q = fmtSelect.value === 'png' ? undefined : parseFloat(qualityRange.value);
+    c.toBlob(function(blob){
+      if (!blob) return;
+      editSizeVal.textContent = "~" + fmtBytes(blob.size);
+      if (file && blob.size > file.size){
+        saveBadge.textContent = "Edited file would be bigger than the original — download the original instead, or pick a lower quality.";
+        saveBadge.classList.add('on'); saveBadge.classList.add('neg');
+        origDl.classList.add('on');
+      } else {
+        saveBadge.classList.remove('on'); saveBadge.classList.remove('neg');
+        origDl.classList.remove('on');
+      }
+    }, type, q);
+  }
+
+  /* ---------- controls ---------- */
+
+  var sliders = [
+    { id:'slBrightness', out:'outBrightness', key:'brightness', fmt:function(v){ return v + '%'; } },
+    { id:'slContrast', out:'outContrast', key:'contrast', fmt:function(v){ return v + '%'; } },
+    { id:'slSaturation', out:'outSaturation', key:'saturation', fmt:function(v){ return v + '%'; } },
+    { id:'slWarmth', out:'outWarmth', key:'warmth', fmt:function(v){ return (v > 0 ? '+' : '') + v; } },
+    { id:'slSharpness', out:'outSharpness', key:'sharpness', fmt:function(v){ return v + '%'; } }
+  ];
+
+  function syncSliders(){
+    sliders.forEach(function(s){
+      var el = document.getElementById(s.id);
+      el.value = adj[s.key];
+      document.getElementById(s.out).textContent = s.fmt(adj[s.key]);
+    });
+  }
+
+  sliders.forEach(function(s){
+    var el = document.getElementById(s.id);
+    el.addEventListener('input', function(){
+      adj[s.key] = parseInt(el.value, 10);
+      document.getElementById(s.out).textContent = s.fmt(adj[s.key]);
+      clearActiveFilter();
+      requestPreview();
+    });
+  });
+
+  document.getElementById('resetAdjustBtn').addEventListener('click', function(){
+    adj = defaults(); syncSliders(); clearActiveFilter(); markFilter('original'); requestPreview();
+  });
+
+  var FILTERS = {
+    original:  { brightness:100, contrast:100, saturation:100, warmth:0,  sharpness:0,  grayscale:0,   sepia:0,  hue:0 },
+    grayscale: { brightness:100, contrast:100, saturation:0,   warmth:0,  sharpness:0,  grayscale:100, sepia:0,  hue:0 },
+    sepia:     { brightness:100, contrast:100, saturation:90,  warmth:10, sharpness:0,  grayscale:0,   sepia:80, hue:0 },
+    vivid:     { brightness:102, contrast:112, saturation:160, warmth:0,  sharpness:0,  grayscale:0,   sepia:0,  hue:0 },
+    warm:      { brightness:100, contrast:100, saturation:110, warmth:30, sharpness:0,  grayscale:0,   sepia:0,  hue:0 },
+    cool:      { brightness:102, contrast:100, saturation:100, warmth:-30,sharpness:0,  grayscale:0,   sepia:0,  hue:0 },
+    bw:        { brightness:100, contrast:115, saturation:0,   warmth:0,  sharpness:0,  grayscale:100, sepia:0,  hue:0 },
+    enhance:   { brightness:104, contrast:112, saturation:112, warmth:4,  sharpness:40, grayscale:0,   sepia:0,  hue:0 }
+  };
+
+  function clearActiveFilter(){
+    document.querySelectorAll('#filterGrid .filter-btn').forEach(function(b){ b.classList.remove('active'); });
+  }
+  function markFilter(name){
+    clearActiveFilter();
+    var b = document.querySelector('#filterGrid .filter-btn[data-filter="' + name + '"]');
+    if (b) b.classList.add('active');
+  }
+
+  document.getElementById('filterGrid').addEventListener('click', function(e){
+    var b = e.target.closest('.filter-btn');
+    if (!b || !img) return;
+    var preset = FILTERS[b.getAttribute('data-filter')];
+    if (!preset) return;
+    adj = {};
+    Object.keys(defaults()).forEach(function(k){ adj[k] = preset[k]; });
+    syncSliders(); markFilter(b.getAttribute('data-filter')); requestPreview();
+  });
+
+  /* Crop, rotate, flip */
+  document.getElementById('cropRow').addEventListener('click', function(e){
+    var b = e.target.closest('.seg-btn');
+    if (!b || !img) return;
+    document.querySelectorAll('#cropRow .seg-btn').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    cropRatio = b.getAttribute('data-crop') === 'free' ? null : parseFloat(b.getAttribute('data-crop'));
+    resetOutSize(); applyOutSize(); requestPreview();
+  });
+
+  document.getElementById('rotateLeftBtn').addEventListener('click', function(){
+    rotateDeg = (rotateDeg + 270) % 360; resetOutSize(); applyOutSize(); requestPreview();
+  });
+  document.getElementById('rotateRightBtn').addEventListener('click', function(){
+    rotateDeg = (rotateDeg + 90) % 360; resetOutSize(); applyOutSize(); requestPreview();
+  });
+  document.getElementById('flipHBtn').addEventListener('click', function(){
+    flipH = !flipH; this.classList.toggle('active', flipH); requestPreview();
+  });
+  document.getElementById('flipVBtn').addEventListener('click', function(){
+    flipV = !flipV; this.classList.toggle('active', flipV); requestPreview();
+  });
+
+  /* Resize */
+  function applyOutSize(){
+    var b = baseDims();
+    outWidthEl.value = outW;
+    outHeightEl.value = outH;
+    var pct = Math.round(outW / b.w * 100);
+    resizeNote.textContent = (pct === 100 && outH === b.h) ? 'Full size' : pct + '% of the edited photo';
+  }
+
+  function setScale(pct){
+    var b = baseDims();
+    outScale = pct;
+    outW = Math.max(16, Math.round(b.w * pct / 100));
+    outH = Math.max(16, Math.round(b.h * pct / 100));
+    document.querySelectorAll('#pctRow .seg-btn').forEach(function(x){
+      x.classList.toggle('active', parseInt(x.getAttribute('data-pct'), 10) === pct);
+    });
+    applyOutSize(); requestPreview();
+  }
+
+  document.getElementById('pctRow').addEventListener('click', function(e){
+    var b = e.target.closest('.seg-btn');
+    if (!b || !img) return;
+    setScale(parseInt(b.getAttribute('data-pct'), 10));
+  });
+
+  outWidthEl.addEventListener('change', function(){
+    var b = baseDims();
+    outW = Math.max(16, Math.min(8000, parseInt(outWidthEl.value, 10) || b.w));
+    if (lockAspect) outH = Math.max(16, Math.round(outW * b.h / b.w));
+    outScale = Math.round(outW / b.w * 100);
+    document.querySelectorAll('#pctRow .seg-btn').forEach(function(x){ x.classList.remove('active'); });
+    applyOutSize(); requestPreview();
+  });
+  outHeightEl.addEventListener('change', function(){
+    var b = baseDims();
+    outH = Math.max(16, Math.min(8000, parseInt(outHeightEl.value, 10) || b.h));
+    if (lockAspect) outW = Math.max(16, Math.round(outH * b.w / b.h));
+    outScale = Math.round(outH / b.h * 100);
+    document.querySelectorAll('#pctRow .seg-btn').forEach(function(x){ x.classList.remove('active'); });
+    applyOutSize(); requestPreview();
+  });
+
+  lockBtn.addEventListener('click', function(){
+    lockAspect = !lockAspect;
+    lockBtn.classList.toggle('locked', lockAspect);
+    lockBtn.textContent = lockAspect ? '🔒' : '🔓';
+  });
+
+  /* Format */
+  fmtSelect.addEventListener('change', function(){
+    qualityField.style.display = fmtSelect.value === 'png' ? 'none' : '';
+    dlNote.textContent = fmtSelect.value === 'png'
+      ? 'PNG keeps full quality and transparency, but the file is bigger.'
+      : 'JPG does not keep transparency. Pick PNG if your photo has a transparent background.';
+    requestPreview();
+  });
+  qualityRange.addEventListener('change', requestPreview);
+
+  /* Hold to see original */
+  function holdStart(e){ if (!img) return; e.preventDefault(); showingOriginal = true; holdBtn.classList.add('holding'); holdBtn.textContent = 'Showing original'; renderPreview(); }
+  function holdEnd(){ if (!img) return; showingOriginal = false; holdBtn.classList.remove('holding'); holdBtn.textContent = 'Hold to see original'; renderPreview(); }
+  holdBtn.addEventListener('pointerdown', holdStart);
+  holdBtn.addEventListener('pointerup', holdEnd);
+  holdBtn.addEventListener('pointerleave', holdEnd);
+  holdBtn.addEventListener('pointercancel', holdEnd);
+
+  /* ---------- download ---------- */
+
+  function triggerDownload(blob, name){
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url; a.download = name;
+    document.body.appendChild(a); a.click();
+    setTimeout(function(){ document.body.removeChild(a); URL.revokeObjectURL(url); }, 800);
+  }
+
+  function baseName(){
+    var n = (file && file.name ? file.name : 'photo').replace(/\.[^.]+$/, '');
+    return n.replace(/[^\w\-]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || 'photo';
+  }
+
+  downloadBtn.addEventListener('click', function(){
+    if (!img) return;
+    downloadBtn.disabled = true;
+    downloadBtn.textContent = 'Working…';
+    var d = outDims();
+    var c = document.createElement('canvas');
+    c.width = d.w; c.height = d.h;
+    drawEdited(c.getContext('2d'), d.w, d.h);
+    var type = fmtSelect.value === 'png' ? 'image/png' : 'image/' + fmtSelect.value;
+    var q = fmtSelect.value === 'png' ? undefined : parseFloat(qualityRange.value);
+    var ext = fmtSelect.value === 'jpeg' ? 'jpg' : fmtSelect.value;
+    c.toBlob(function(blob){
+      downloadBtn.disabled = false;
+      downloadBtn.textContent = 'Download edited photo';
+      if (!blob){ showError('Download failed — try another format.'); return; }
+      if (file && blob.size > file.size){
+        saveBadge.textContent = "Edited file (" + fmtBytes(blob.size) + ") is bigger than the original (" + fmtBytes(file.size) + ") — the original is offered below instead.";
+        saveBadge.classList.add('on'); saveBadge.classList.add('neg');
+        origDl.classList.add('on');
+      } else {
+        saveBadge.textContent = "Downloaded — " + fmtBytes(blob.size) + ", " + d.w + " × " + d.h + " px.";
+        saveBadge.classList.add('on'); saveBadge.classList.remove('neg');
+        origDl.classList.remove('on');
+      }
+      triggerDownload(blob, baseName() + '-edited.' + ext);
+    }, type, q);
+  });
+
+  downloadOrigBtn.addEventListener('click', function(){
+    if (!file) return;
+    triggerDownload(file, file.name);
+  });
+
+  /* ---------- upload ---------- */
+
+  function loadFile(f){
+    if (!f) return;
+    if (!/^image\/(jpeg|png|webp)$/.test(f.type)){ showError('Please add a JPG, PNG or WebP photo.'); return; }
+    if (f.size > MAX_FILE){ showError('That photo is over 25 MB. Please add a smaller one.'); return; }
+    hideError();
+    if (objectUrl) URL.revokeObjectURL(objectUrl);
+    file = f;
+    objectUrl = URL.createObjectURL(f);
+    var next = new Image();
+    next.onload = function(){
+      img = next;
+      adj = defaults(); rotateDeg = 0; flipH = false; flipV = false;
+      cropRatio = null; outScale = 100; lockAspect = true;
+      syncSliders(); markFilter('original');
+      document.querySelectorAll('#cropRow .seg-btn').forEach(function(x){
+        x.classList.toggle('active', x.getAttribute('data-crop') === 'free');
+      });
+      document.querySelectorAll('#pctRow .seg-btn').forEach(function(x){
+        x.classList.toggle('active', x.getAttribute('data-pct') === '100');
+      });
+      document.getElementById('flipHBtn').classList.remove('active');
+      document.getElementById('flipVBtn').classList.remove('active');
+      lockBtn.classList.add('locked'); lockBtn.textContent = '🔒';
+      fileNameEl.textContent = f.name;
+      fileMetaEl.textContent = img.naturalWidth + " × " + img.naturalHeight + " px · " + fmtBytes(f.size);
+      origSizeVal.textContent = fmtBytes(f.size);
+      editSizeVal.textContent = "—";
+      saveBadge.classList.remove('on'); origDl.classList.remove('on');
+      dropzone.style.display = 'none';
+      editor.classList.add('on');
+      resetOutSize(); applyOutSize();
+      renderPreview();
+    };
+    next.onerror = function(){ showError('That file could not be opened as a photo.'); };
+    next.src = objectUrl;
+  }
+
+  browseBtn.addEventListener('click', function(e){ e.stopPropagation(); fileInput.click(); });
+  dropzone.addEventListener('click', function(){ fileInput.click(); });
+  dropzone.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fileInput.click(); } });
+  fileInput.addEventListener('change', function(){ loadFile(fileInput.files[0]); fileInput.value = ''; });
+  ['dragenter','dragover'].forEach(function(ev){
+    dropzone.addEventListener(ev, function(e){ e.preventDefault(); dropzone.classList.add('dragging'); });
+  });
+  ['dragleave','drop'].forEach(function(ev){
+    dropzone.addEventListener(ev, function(e){ e.preventDefault(); dropzone.classList.remove('dragging'); });
+  });
+  dropzone.addEventListener('drop', function(e){
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  document.addEventListener('paste', function(e){
+    if (!e.clipboardData) return;
+    for (var i = 0; i < e.clipboardData.items.length; i++){
+      var item = e.clipboardData.items[i];
+      if (item.type && item.type.indexOf('image/') === 0){ loadFile(item.getAsFile()); return; }
+    }
+  });
+
+  newPhotoBtn.addEventListener('click', function(){
+    editor.classList.remove('on');
+    dropzone.style.display = '';
+    img = null; file = null;
+    if (objectUrl){ URL.revokeObjectURL(objectUrl); objectUrl = null; }
+  });
+
+  resetBtn.addEventListener('click', function(){
+    if (!img) return;
+    adj = defaults(); rotateDeg = 0; flipH = false; flipV = false; cropRatio = null; outScale = 100;
+    syncSliders(); markFilter('original');
+    document.querySelectorAll('#cropRow .seg-btn').forEach(function(x){
+      x.classList.toggle('active', x.getAttribute('data-crop') === 'free');
+    });
+    document.getElementById('flipHBtn').classList.remove('active');
+    document.getElementById('flipVBtn').classList.remove('active');
+    resetOutSize(); applyOutSize(); requestPreview();
+  });
+
+  syncSliders();
+})();
+</script>
+</body>
+</html>
