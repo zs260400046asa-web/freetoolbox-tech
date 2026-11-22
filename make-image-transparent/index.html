@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Make Image Transparent: Free, in Your Browser — FreeToolBox</title>
+    <meta name="description" content="Make any image transparent free in your browser. Remove the background in three steps, save a real transparent PNG, and avoid the white box trap. No signup, no watermark." />
+    <meta name="keywords" content="make image transparent" />
+    <link rel="canonical" href="https://freetoolbox.tech/make-image-transparent/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="FreeToolBox" />
+    <meta property="og:title" content="Make Image Transparent: Free, in Your Browser — FreeToolBox" />
+    <meta property="og:description" content="Make any image transparent free in your browser. Remove the background in three steps, save a real transparent PNG, and avoid the white box trap. No signup, no watermark." />
+    <meta property="og:url" content="https://freetoolbox.tech/make-image-transparent/" />
+    <meta property="og:image" content="https://freetoolbox.tech/assets/blog-transparent.jpg" />
+    <meta property="article:published_time" content="2026-11-22" />
+    <meta property="article:modified_time" content="2026-11-22" />
+    <script type="application/ld+json">
+    {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Make Image Transparent: Free, in Your Browser",
+  "description": "Make any image transparent free in your browser. Remove the background in three steps, save a real transparent PNG, and avoid the white box trap. No signup, no watermark.",
+  "url": "https://freetoolbox.tech/make-image-transparent/",
+  "image": "https://freetoolbox.tech/assets/blog-transparent.jpg",
+  "datePublished": "2026-11-22",
+  "dateModified": "2026-11-22",
+  "author": {
+    "@type": "Organization",
+    "name": "FreeToolBox",
+    "url": "https://freetoolbox.tech"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "FreeToolBox",
+    "url": "https://freetoolbox.tech"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "https://freetoolbox.tech/make-image-transparent/"
+  }
+}
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/assets/logo.svg" />
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/logo.png" />
+    <link rel="apple-touch-icon" href="/assets/logo.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg: #f6f5f1;
+        --surface: #ffffff;
+        --surface-2: #efede7;
+        --ink: #17140f;
+        --ink-soft: #45403a;
+        --muted: #7a7468;
+        --line: #ddd9cf;
+        --accent: #ff4b1f;
+        --accent-deep: #d93a12;
+        --accent-soft: #ffe9e2;
+        --ok: #1d7a4f;
+        --checker-a: #ffffff;
+        --checker-b: #e6e3da;
+        --shadow: 0 18px 44px rgba(23, 20, 15, 0.10);
+        --radius: 18px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121110;
+          --surface: #1d1b18;
+          --surface-2: #262320;
+          --ink: #f3f0e9;
+          --ink-soft: #cfc9bd;
+          --muted: #9a937f;
+          --line: #35312b;
+          --accent: #ff5a2a;
+          --accent-deep: #ff6c40;
+          --accent-soft: #3a211a;
+          --ok: #4cc084;
+          --checker-a: #2a2723;
+          --checker-b: #1e1c19;
+          --shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+        }
+      }
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--ink);
+        font-family: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+        font-size: 16px;
+        line-height: 1.55;
+        -webkit-font-smoothing: antialiased;
+      }
+      .mono { font-family: "IBM Plex Mono", ui-monospace, monospace; }
+      .wrap { max-width: 1140px; margin: 0 auto; padding: 0 20px; }
+
+      /* ---------- brand header ---------- */
+      .site-header {
+        display: flex; align-items: center; justify-content: space-between; gap: 16px;
+        padding: 22px 0 2px;
+      }
+      .brand { display: inline-flex; align-items: center; gap: 12px; text-decoration: none; color: var(--ink); }
+      .brand-mark {
+        width: 46px; height: 46px; flex: none; display: block; border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(255, 75, 31, 0.30);
+      }
+      .brand-name { font-size: 22px; font-weight: 900; letter-spacing: -0.025em; line-height: 1; white-space: nowrap; }
+      .brand-name .box { color: var(--accent-deep); }
+      .brand-sub {
+        font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 600;
+        letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-top: 5px;
+      }
+      .header-tool {
+        font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 600;
+        letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft);
+        border: 1px solid var(--line); border-radius: 999px; padding: 7px 13px;
+        background: var(--surface); white-space: nowrap;
+      }
+      .header-tool b { color: var(--accent-deep); font-weight: 600; }
+      @media (max-width: 560px) {
+        .header-tool { display: none; }
+        .brand-mark { width: 40px; height: 40px; }
+        .brand-name { font-size: 19px; }
+      }
+
+      /* ---------- hero ---------- */
+      .hero { padding: 30px 0 8px; }
+      .kicker {
+        display: inline-flex; align-items: center; gap: 8px;
+        font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 600;
+        letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft);
+        border: 1px solid var(--line); border-radius: 999px; padding: 6px 12px;
+        background: var(--surface);
+      }
+      .kicker .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); flex: none; }
+      h1 {
+        font-size: clamp(38px, 6.4vw, 68px); line-height: 1.02; font-weight: 900;
+        letter-spacing: -0.025em; margin: 20px 0 14px; max-width: 12.5em;
+      }
+      h1 .hl {
+        background-image: linear-gradient(var(--accent), var(--accent));
+        background-repeat: no-repeat; background-size: 100% 0.14em;
+        background-position: 0 96%; padding-bottom: 0.04em;
+      }
+      .sub { font-size: clamp(16px, 2vw, 19px); color: var(--ink-soft); max-width: 56ch; margin: 0; }
+      .sub strong { color: var(--ink); }
+
+      /* ---------- dropzone ---------- */
+      .tool { padding: 26px 0 10px; }
+      .dropzone {
+        border: 2px dashed var(--line); border-radius: var(--radius);
+        background: var(--surface); text-align: center;
+        padding: 46px 22px 40px; cursor: pointer; position: relative;
+        transition: border-color .18s ease, background .18s ease, transform .18s ease;
+      }
+      .dropzone:hover, .dropzone:focus-visible { border-color: var(--accent); outline: none; }
+      .dropzone.dragging { border-color: var(--accent); background: var(--accent-soft); transform: scale(1.005); }
+      .dz-checker {
+        width: 74px; height: 74px; margin: 0 auto 18px; border-radius: 16px;
+        border: 1px solid var(--line);
+        background:
+          conic-gradient(var(--checker-b) 25%, var(--checker-a) 0 50%, var(--checker-b) 0 75%, var(--checker-a) 0);
+        background-size: 22px 22px;
+        display: flex; align-items: center; justify-content: center;
+      }
+      .dz-checker svg { width: 36px; height: 36px; }
+      .dz-title { font-size: 22px; font-weight: 800; letter-spacing: -0.01em; margin: 0 0 6px; }
+      .dz-note { color: var(--muted); margin: 0 0 20px; font-size: 15px; }
+      .btn {
+        appearance: none; border: 0; cursor: pointer; font: inherit; font-weight: 700;
+        border-radius: 999px; padding: 13px 26px; display: inline-flex; align-items: center; gap: 9px;
+        transition: transform .15s ease, background .15s ease, box-shadow .15s ease;
+      }
+      .btn:active { transform: translateY(1px); }
+      .btn-accent { background: var(--accent); color: #fff; box-shadow: 0 8px 22px rgba(255, 75, 31, 0.32); }
+      .btn-accent:hover { background: var(--accent-deep); }
+      .btn-ink { background: var(--ink); color: var(--bg); }
+      .btn-ink:hover { opacity: .88; }
+      .btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+      .btn-ghost:hover { border-color: var(--ink); }
+      .btn[disabled] { opacity: .55; cursor: wait; box-shadow: none; }
+      .dz-meta { margin-top: 18px; font-size: 12.5px; color: var(--muted); letter-spacing: .02em; }
+      .sample-link {
+        margin-top: 14px; background: none; border: 0; cursor: pointer; font: inherit;
+        color: var(--accent-deep); font-weight: 600; font-size: 15px; padding: 4px;
+        text-decoration: underline; text-underline-offset: 3px;
+      }
+      .sample-link:hover { color: var(--accent); }
+
+      /* ---------- workspace ---------- */
+      .workspace { display: none; gap: 22px; grid-template-columns: minmax(0, 1fr) 320px; align-items: start; }
+      .workspace.show { display: grid; }
+      .stage-card {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        box-shadow: var(--shadow); overflow: hidden;
+      }
+      .stage {
+        position: relative; overflow: hidden; touch-action: none; user-select: none;
+        background:
+          conic-gradient(var(--checker-b) 25%, var(--checker-a) 0 50%, var(--checker-b) 0 75%, var(--checker-a) 0);
+        background-size: 26px 26px;
+      }
+      .stage canvas { display: block; width: 100%; height: auto; }
+      .stage .layer-original {
+        position: absolute; inset: 0; width: 100%; height: 100%;
+      }
+      .stage .layer-original canvas { width: 100%; height: 100%; }
+      .compare-handle {
+        position: absolute; top: 0; bottom: 0; width: 2px; background: #fff;
+        box-shadow: 0 0 0 1px rgba(0,0,0,.25), 0 0 18px rgba(0,0,0,.35);
+        transform: translateX(-1px); pointer-events: none; display: none;
+      }
+      .compare-handle::after {
+        content: "‹ ›"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        background: var(--ink); color: var(--bg); font-size: 13px; font-weight: 700;
+        border-radius: 999px; padding: 5px 9px; letter-spacing: 1px; white-space: nowrap;
+      }
+      .stage.has-result .compare-handle { display: block; }
+      .stage-tag {
+        position: absolute; top: 10px; font-family: "IBM Plex Mono", monospace; font-size: 11px;
+        font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+        background: rgba(15, 13, 10, .78); color: #f5f2ea; padding: 4px 9px; border-radius: 6px;
+        pointer-events: none;
+      }
+      .tag-before { left: 10px; }
+      .tag-after { right: 10px; background: var(--accent); color: #fff; }
+      .stage-bar {
+        display: flex; align-items: center; gap: 12px; padding: 13px 16px;
+        border-top: 1px solid var(--line); background: var(--surface);
+      }
+      .stage-bar label { font-size: 13px; font-weight: 600; color: var(--ink-soft); white-space: nowrap; }
+      .stage-bar input[type="range"] { flex: 1; accent-color: var(--accent); }
+      .file-meta { font-size: 12.5px; color: var(--muted); padding: 0 16px 14px; background: var(--surface); }
+
+      .panel {
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        padding: 20px; box-shadow: var(--shadow);
+      }
+      .panel h2 { font-size: 15px; font-weight: 800; margin: 0 0 4px; letter-spacing: .01em; }
+      .panel .hint { font-size: 13.5px; color: var(--muted); margin: 0 0 14px; }
+      .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 9px; margin-bottom: 6px; }
+      .swatch {
+        appearance: none; cursor: pointer; border: 2px solid var(--line); border-radius: 12px;
+        height: 46px; padding: 0; position: relative; font: inherit;
+        transition: border-color .15s ease, transform .15s ease;
+      }
+      .swatch:hover { transform: translateY(-1px); }
+      .swatch[aria-checked="true"] { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-soft); }
+      .swatch .sw-label {
+        position: absolute; left: 0; right: 0; bottom: -19px; font-size: 10.5px; color: var(--muted);
+        font-weight: 600; text-align: center;
+      }
+      .sw-transparent {
+        background: conic-gradient(var(--checker-b) 25%, var(--checker-a) 0 50%, var(--checker-b) 0 75%, var(--checker-a) 0);
+        background-size: 14px 14px;
+      }
+      .custom-color { display: flex; align-items: center; gap: 10px; margin: 30px 0 4px; font-size: 13.5px; font-weight: 600; color: var(--ink-soft); }
+      .custom-color input[type="color"] {
+        width: 44px; height: 34px; border: 1px solid var(--line); border-radius: 9px;
+        background: var(--surface); padding: 2px; cursor: pointer;
+      }
+      .panel .divider { border: 0; border-top: 1px solid var(--line); margin: 20px 0; }
+      .panel .btn { width: 100%; justify-content: center; margin-bottom: 10px; }
+      .dl-note { font-size: 12.5px; color: var(--muted); text-align: center; margin: 2px 0 0; }
+
+      /* processing overlay */
+      .processing {
+        position: absolute; inset: 0; display: none; flex-direction: column; gap: 14px;
+        align-items: center; justify-content: center; text-align: center; padding: 24px;
+        background: color-mix(in srgb, var(--surface) 88%, transparent);
+        backdrop-filter: blur(3px); z-index: 5;
+      }
+      .processing.show { display: flex; }
+      .spinner {
+        width: 46px; height: 46px; border-radius: 50%;
+        border: 4px solid var(--line); border-top-color: var(--accent);
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      .proc-status { font-weight: 700; font-size: 17px; margin: 0; }
+      .proc-sub { color: var(--muted); font-size: 13.5px; margin: 0; max-width: 38ch; }
+      .progress-track { width: min(320px, 80%); height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; }
+      .progress-fill { height: 100%; width: 0%; background: var(--accent); border-radius: 99px; transition: width .25s ease; }
+      .progress-fill.indeterminate { width: 40%; animation: slide 1.1s ease-in-out infinite alternate; }
+      @keyframes slide { from { margin-left: 0; } to { margin-left: 60%; } }
+
+      .error-box {
+        display: none; margin-top: 16px; border: 1px solid #e5b4a6; background: #fdf0ec;
+        color: #7c2410; border-radius: 12px; padding: 14px 16px; font-size: 14.5px;
+      }
+      @media (prefers-color-scheme: dark) {
+        .error-box { background: #33190f; border-color: #6e3524; color: #ffb59d; }
+      }
+      .error-box.show { display: block; }
+      .error-box button { margin-left: 10px; }
+
+      /* ---------- info sections ---------- */
+      section.info { padding: 44px 0 6px; }
+      .sec-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 20px; }
+      .sec-num { font-family: "IBM Plex Mono", monospace; font-size: 13px; font-weight: 600; color: var(--accent-deep); }
+      .sec-head h2 { font-size: clamp(24px, 3.4vw, 32px); font-weight: 900; letter-spacing: -0.02em; margin: 0; }
+      .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .step { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 22px; }
+      .step .n {
+        font-size: 40px; font-weight: 900; line-height: 1; color: transparent;
+        -webkit-text-stroke: 1.5px var(--accent); margin-bottom: 12px;
+      }
+      .step h3 { margin: 0 0 6px; font-size: 17px; font-weight: 800; }
+      .step p { margin: 0; color: var(--ink-soft); font-size: 14.5px; }
+      .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+      .card h3 { margin: 0 0 10px; font-size: 18px; font-weight: 800; }
+      .card p, .card li { color: var(--ink-soft); font-size: 15px; }
+      .card p { margin: 0 0 10px; }
+      .card ul { margin: 0; padding-left: 20px; }
+      .card li { margin-bottom: 7px; }
+      .card li::marker { color: var(--accent); }
+
+      details.faq {
+        background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+        padding: 16px 20px; margin-bottom: 10px;
+      }
+      details.faq summary { cursor: pointer; font-weight: 700; font-size: 16px; list-style: none; display: flex; justify-content: space-between; gap: 12px; }
+      details.faq summary::-webkit-details-marker { display: none; }
+      details.faq summary::after { content: "+"; color: var(--accent); font-weight: 900; font-size: 20px; line-height: 1; }
+      details.faq[open ] summary::after { content: "–"; }
+      details.faq p { color: var(--ink-soft); margin: 10px 0 2px; font-size: 15px; }
+
+      /* ---------- header nav ---------- */
+      .site-nav { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+      .site-nav a {
+        font-size: 14px; font-weight: 700; color: var(--ink-soft); text-decoration: none;
+        padding: 8px 12px; border-radius: 999px;
+      }
+      .site-nav a:hover { color: var(--ink); background: var(--surface-2); }
+      .site-nav a.nav-blog { background: var(--ink); color: var(--bg); }
+      .site-nav a.nav-blog:hover { background: var(--accent); color: #fff; }
+      @media (max-width: 700px) { .site-nav a:not(.nav-blog) { display: none; } }
+
+      /* ---------- blog ---------- */
+      .blog-intro { color: var(--ink-soft); font-size: 16px; max-width: 68ch; margin: 0 0 18px; }
+      .blog-intro strong { color: var(--ink); }
+      .blog-tools { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 20px; }
+      .blog-search {
+        flex: 1 1 220px; display: flex; align-items: center; gap: 9px;
+        background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 9px 15px;
+      }
+      .blog-search input { border: 0; outline: none; background: none; font: inherit; font-size: 14.5px; color: var(--ink); width: 100%; }
+      .blog-search input::placeholder { color: var(--muted); }
+      .filter-pills { display: flex; flex-wrap: wrap; gap: 7px; }
+      .filter-pill {
+        appearance: none; cursor: pointer; font: inherit; font-size: 13px; font-weight: 700;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+        border-radius: 999px; padding: 8px 13px;
+      }
+      .filter-pill:hover { border-color: var(--ink); }
+      .filter-pill[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+      .blog-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+      .post-card { text-decoration: none;
+        background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
+        overflow: hidden; display: flex; flex-direction: column; cursor: pointer; text-align: left;
+        font: inherit; color: inherit; padding: 0; width: 100%;
+        transition: border-color .16s ease, transform .16s ease, box-shadow .16s ease;
+      }
+      .post-card:hover, .post-card:focus-visible { border-color: var(--accent); transform: translateY(-2px); box-shadow: var(--shadow); outline: none; }
+      .post-card[hidden] { display: none; }
+      .post-visual {
+        height: 148px; position: relative; overflow: hidden; flex: none;
+        display: flex; align-items: flex-end; padding: 14px 16px;
+      }
+      .post-visual .pv-word {
+        font-size: 30px; font-weight: 900; letter-spacing: -0.03em; line-height: 0.98; max-width: 9em;
+      }
+      .post-visual .pv-tag {
+        position: absolute; top: 12px; right: 12px; font-family: "IBM Plex Mono", monospace;
+        font-size: 10.5px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+        background: rgba(15,13,10,.82); color: #f5f2ea; padding: 4px 8px; border-radius: 6px;
+      }
+      .pv-checker { background: conic-gradient(var(--checker-b) 25%, var(--checker-a) 0 50%, var(--checker-b) 0 75%, var(--checker-a) 0); background-size: 24px 24px; color: var(--ink); }
+      .pv-orange { background: var(--accent); color: #fff; }
+      .pv-ink { background: var(--ink); color: var(--bg); }
+      .pv-sand { background: #f3e3bd; color: #3a2c10; }
+      @media (prefers-color-scheme: dark) { .pv-sand { background: #4a3a18; color: #f3e3bd; } }
+      .pv-sky { background: #cfe4ff; color: #17365e; }
+      @media (prefers-color-scheme: dark) { .pv-sky { background: #22364f; color: #cfe4ff; } }
+      .pv-mint { background: #d8ecd2; color: #1d4023; }
+      @media (prefers-color-scheme: dark) { .pv-mint { background: #263d27; color: #d8ecd2; } }
+      .post-body { padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
+      .post-meta { font-family: "IBM Plex Mono", monospace; font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--accent-deep); }
+      .post-body h3, .post-body .post-title { margin: 0; font-size: 18.5px; display:block; font-weight: 800; letter-spacing: -0.015em; line-height: 1.25; }
+      .post-body p { margin: 0; color: var(--ink-soft); font-size: 14.5px; flex: 1; }
+      .post-read { font-size: 14px; font-weight: 800; color: var(--ink); }
+      .post-read span { color: var(--accent); }
+      .post-featured { grid-column: 1 / -1; flex-direction: row; }
+      .post-featured .post-visual { height: auto; min-height: 210px; flex: 0 0 42%; }
+      .post-featured .post-visual .pv-word { font-size: 40px; }
+      .post-featured .post-body { padding: 24px; }
+      .post-featured .post-body h3, .post-featured .post-body .post-title { font-size: 25px; }
+      .post-featured .post-body p { font-size: 15.5px; }
+      .blog-empty { display: none; border: 1px dashed var(--line); border-radius: var(--radius); padding: 26px; text-align: center; color: var(--muted); background: var(--surface); }
+      .blog-empty.show { display: block; }
+
+      /* article reader */
+      .reader { display: none; margin-top: 20px; }
+      .reader.show { display: block; }
+      .reader-bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+      .reader-back {
+        appearance: none; cursor: pointer; font: inherit; font-weight: 800; font-size: 14.5px;
+        background: var(--ink); color: var(--bg); border: 0; border-radius: 999px; padding: 10px 18px;
+      }
+      .reader-back:hover { background: var(--accent); color: #fff; }
+      .reader-kicker { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+      article.post { display: none; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: clamp(22px, 4vw, 44px); box-shadow: var(--shadow); }
+      article.post.show { display: block; }
+      article.post .a-meta { font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--accent-deep); margin: 0 0 10px; }
+      article.post h1.a-title { font-size: clamp(27px, 4.4vw, 40px); font-weight: 900; letter-spacing: -0.025em; line-height: 1.08; margin: 0 0 14px; max-width: 22em; }
+      article.post .a-lede { font-size: 18px; color: var(--ink-soft); margin: 0 0 22px; max-width: 62ch; }
+      article.post .a-body { max-width: 68ch; }
+      article.post .a-body h2 { font-size: 19px; font-weight: 800; letter-spacing: -0.01em; margin: 26px 0 8px; }
+      article.post .a-body p { color: var(--ink-soft); font-size: 16px; margin: 0 0 12px; }
+      article.post .a-body ul, article.post .a-body ol { color: var(--ink-soft); font-size: 16px; margin: 0 0 14px; padding-left: 22px; }
+      article.post .a-body li { margin-bottom: 7px; }
+      article.post .a-body li::marker { color: var(--accent); font-weight: 700; }
+      article.post .a-body strong { color: var(--ink); }
+      article.post .a-body a { color: var(--accent-deep); font-weight: 700; }
+      .a-callout { background: var(--surface-2); border-radius: 12px; padding: 16px 18px; margin: 18px 0; }
+      .a-callout p { margin: 0 !important; }
+      .a-cta {
+        margin-top: 28px; border-top: 1px solid var(--line); padding-top: 22px;
+        display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;
+      }
+      .a-cta p { margin: 0; font-weight: 800; font-size: 17px; max-width: 34ch; }
+      .a-next { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+      .a-next button, .a-next a {
+        appearance: none; cursor: pointer; font: inherit; font-size: 13.5px; font-weight: 700;
+        border: 1px solid var(--line); background: var(--surface); color: var(--ink-soft);
+        border-radius: 999px; padding: 8px 13px;
+      }
+      .a-next button:hover, .a-next a:hover { border-color: var(--accent); color: var(--accent-deep); }
+      @media (max-width: 860px) {
+        .blog-grid { grid-template-columns: 1fr; }
+        .post-featured { flex-direction: column; }
+        .post-featured .post-visual { min-height: 150px; flex: none; }
+      }
+
+
+      /* ---------- blog v2: keyword pages ---------- */
+      .post-visual { padding: 0; display: block; height: 168px; }
+      .post-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+      .post-featured .post-visual { height: auto; }
+      .post-slug {
+        font-family: "IBM Plex Mono", monospace; font-size: 12px; font-weight: 600;
+        color: var(--accent-deep); letter-spacing: .01em; word-break: break-all;
+      }
+      .post-kw { display: flex; flex-wrap: wrap; gap: 6px; }
+      .kw-badge {
+        font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 600;
+        letter-spacing: .04em; border: 1px solid var(--line); border-radius: 999px;
+        padding: 3px 9px; color: var(--ink-soft); background: var(--surface-2);
+      }
+      .kw-badge b { color: var(--ok); font-weight: 600; }
+
+      .kw-map { margin-top: 26px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+      .kw-map h3 { margin: 0; padding: 18px 20px 4px; font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+      .kw-map .kw-note { margin: 0; padding: 0 20px 14px; color: var(--muted); font-size: 13.5px; }
+      .kw-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      .kw-table th {
+        text-align: left; font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 600;
+        letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+        padding: 10px 20px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+        background: var(--surface-2);
+      }
+      .kw-table td { padding: 11px 20px; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--ink-soft); }
+      .kw-table tr:last-child td { border-bottom: 0; }
+      .kw-table td.url { font-family: "IBM Plex Mono", monospace; font-size: 12.5px; color: var(--accent-deep); font-weight: 600; word-break: break-all; }
+      .kw-table td.kw { font-weight: 700; color: var(--ink); }
+      .kw-table .diff-low { color: var(--ok); font-weight: 700; }
+      .kw-table .diff-med { color: var(--accent-deep); font-weight: 700; }
+      .kw-table button, .kw-table a {
+        appearance: none; cursor: pointer; font: inherit; font-size: 13px; font-weight: 800;
+        background: none; border: 0; color: var(--ink); padding: 0; white-space: nowrap;
+      }
+      .kw-table button:hover, .kw-table a:hover { color: var(--accent-deep); }
+      @media (max-width: 640px) {
+        .kw-table thead { display: none; }
+        .kw-table, .kw-table tbody, .kw-table tr, .kw-table td { display: block; }
+        .kw-table td { padding: 3px 20px; border-bottom: 0; }
+        .kw-table tr { padding: 12px 0; border-bottom: 1px solid var(--line); }
+        .kw-table tr:last-child { border-bottom: 0; }
+      }
+
+      .std-strip { margin-top: 16px; background: var(--ink); color: var(--bg); border-radius: var(--radius); padding: 24px; }
+      .std-strip h3 { margin: 0 0 6px; font-size: 19px; font-weight: 800; letter-spacing: -0.01em; }
+      .std-strip > p { margin: 0 0 16px; color: var(--ink-soft); color: color-mix(in srgb, var(--bg) 72%, transparent); font-size: 14.5px; max-width: 68ch; }
+      .std-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+      .std-item { border: 1px solid color-mix(in srgb, var(--bg) 22%, transparent); border-radius: 12px; padding: 14px; }
+      .std-item .std-t { font-weight: 800; font-size: 14.5px; margin: 0 0 5px; }
+      .std-item p { margin: 0; font-size: 13.5px; color: color-mix(in srgb, var(--bg) 72%, transparent); }
+      .std-strip a { color: var(--accent); font-weight: 700; }
+      @media (max-width: 860px) { .std-grid { grid-template-columns: 1fr 1fr; } }
+      @media (max-width: 520px) { .std-grid { grid-template-columns: 1fr; } }
+
+      /* article v2 */
+      .crumbs { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .03em; color: var(--muted); margin: 0 0 14px; }
+      .crumbs button { appearance: none; background: none; border: 0; cursor: pointer; font: inherit; color: var(--accent-deep); font-weight: 600; padding: 0; }
+      .crumbs .sep { margin: 0 6px; }
+      .a-url {
+        display: inline-block; font-family: "IBM Plex Mono", monospace; font-size: 12.5px; font-weight: 600;
+        background: var(--accent-soft); color: var(--accent-deep); border-radius: 8px; padding: 5px 10px; margin: 0 0 16px;
+        word-break: break-all;
+      }
+      .a-hero { margin: 0 0 8px; }
+      .a-hero img { width: 100%; height: auto; max-height: 430px; object-fit: cover; border-radius: 14px; display: block; }
+      .a-hero figcaption { font-size: 13px; color: var(--muted); margin-top: 8px; }
+      .toc {
+        background: var(--surface-2); border-radius: 12px; padding: 16px 18px; margin: 18px 0 6px;
+      }
+      .toc h2 { margin: 0 0 8px !important; font-size: 13px !important; font-family: "IBM Plex Mono", monospace; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+      .toc ol { margin: 0; padding-left: 20px; color: var(--ink-soft); font-size: 15px; }
+      .toc li { margin-bottom: 5px; }
+      .toc a { color: var(--ink); font-weight: 600; text-decoration: none; }
+      .toc a:hover { color: var(--accent-deep); text-decoration: underline; text-underline-offset: 3px; }
+      article.post .a-body h2[id] { scroll-margin-top: 18px; }
+      .a-body figure { margin: 18px 0; }
+      .a-body figure img { width: 100%; height: auto; border-radius: 12px; display: block; }
+      .a-body figure figcaption { font-size: 13px; color: var(--muted); margin-top: 7px; }
+      .a-table { width: 100%; border-collapse: collapse; font-size: 14.5px; margin: 14px 0 18px; }
+      .a-table th, .a-table td { text-align: left; padding: 9px 12px; border: 1px solid var(--line); color: var(--ink-soft); vertical-align: top; }
+      .a-table th { background: var(--surface-2); color: var(--ink); font-weight: 800; }
+      .a-table td strong { color: var(--ink); }
+      .a-faq h4 { margin-bottom: 12px !important; }
+      .a-sources { font-size: 13.5px; color: var(--muted); margin-top: 20px; border-top: 1px solid var(--line); padding-top: 14px; }
+      .a-sources a { color: var(--accent-deep); font-weight: 700; }
+      @media (max-width: 640px) { .a-table { font-size: 13.5px; } .a-table th, .a-table td { padding: 7px 8px; } }
+
+      footer { margin-top: 52px; border-top: 1px solid var(--line); padding: 26px 0 40px; }
+      .foot-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+      .foot-brand img { width: 30px; height: 30px; border-radius: 8px; display: block; }
+      .foot-brand .fb-name { font-size: 16px; font-weight: 900; letter-spacing: -0.02em; }
+      .foot-brand .fb-name .box { color: var(--accent-deep); }
+      .foot-brand .fb-sub { font-family: "IBM Plex Mono", monospace; font-size: 11px; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; }
+      .foot-row { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; justify-content: space-between; }
+      .foot-row p { margin: 0; color: var(--muted); font-size: 13.5px; max-width: 62ch; }
+      .soon { font-family: "IBM Plex Mono", monospace; font-size: 12px; letter-spacing: .06em; color: var(--ink-soft); }
+      .soon b { color: var(--accent-deep); }
+
+      @media (max-width: 860px) {
+        .workspace { grid-template-columns: 1fr; }
+        .steps, .two-col { grid-template-columns: 1fr; }
+        .hero { padding-top: 30px; }
+        .dropzone { padding: 36px 16px 30px; }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .spinner, .progress-fill.indeterminate { animation: none; }
+        html { scroll-behavior: auto; }
+      }
+    </style>
+    <style>article.post{display:block} .reader{display:block} .post-card{pointer-events:auto}</style>
+  </head>
+  <body>
+    <main class="wrap" id="top">
+<header class="site-header">
+        <a class="brand" href="/" aria-label="FreeToolBox — home">
+          <img class="brand-mark" src="/assets/logo.svg" alt="" width="46" height="46" />
+          <span>
+            <span class="brand-name">FreeTool<span class="box">Box</span></span>
+            <span class="brand-sub" style="display:block">freetoolbox.tech</span>
+          </span>
+        </a>
+        <nav class="site-nav" aria-label="Site">
+          <a href="/#how">How it works</a>
+          <a href="/#blog" class="nav-blog">Blog</a>
+          <a href="/#faq">FAQ</a>
+          <span class="header-tool">Tool 01 — <b>Background Remover</b></span>
+        </nav>
+      </header>
+      <section class="info" aria-label="Guide">
+        <div class="reader show">
+
+            <p class="crumbs"><a href="/#blog">Blog</a><span class="sep">/</span>make-image-transparent</p>
+            <p class="a-meta">Ideas &amp; tips · 5 min read · Published 22 Nov 2026 · Updated 22 Nov 2026</p>
+            <h1 class="a-title">Make Image Transparent: Free, in Your Browser</h1>
+            <span class="a-url">freetoolbox.tech/make-image-transparent/</span>
+            <p class="a-lede">A transparent image is an image with no background at all — just the subject, ready to sit on any colour, photo or page. Making one takes about ten seconds in your browser: open the image, remove the background, download it as a PNG. No signup, no install, no watermark.</p>
+            <figure class="a-hero">
+              <img src="/assets/blog-transparent.jpg" alt="A white mug and a small plant cut out and floating over a transparency checkerboard" loading="lazy" />
+              <figcaption>The checkerboard means see-through — that is what a transparent image looks like before it meets its new background.</figcaption>
+            </figure>
+            <nav class="toc" aria-label="Table of contents">
+              <h2>Table of contents</h2>
+              <ol>
+                <li><a href="#transparent-steps">Make any image transparent in 3 steps</a></li>
+                <li><a href="#transparent-check">How to tell the transparency actually worked</a></li>
+                <li><a href="#transparent-mistakes">The 4 mistakes that ruin a transparent image</a></li>
+                <li><a href="#transparent-uses">Where a transparent image works best</a></li>
+                <li><a href="#transparent-faq">Questions</a></li>
+              </ol>
+            </nav>
+            <div class="a-body">
+              <h2 id="transparent-steps">Make any image transparent in 3 steps</h2>
+              <ol>
+                <li><strong>Open your image.</strong> Drag it onto the <a href="/">Background Remover</a> or choose a file — JPG, PNG and WebP all work. Nothing uploads anywhere: the image stays on your device and the background removal runs in your browser.</li>
+                <li><strong>Let the tool cut the background out.</strong> It finds the subject and removes everything around it in a few seconds. The checkerboard pattern behind your subject means transparent — that is the background gone, not a new colour.</li>
+                <li><strong>Download it as a PNG.</strong> PNG is the format that holds transparency. Save it, and the image stays transparent wherever you use it next.</li>
+              </ol>
+              <h2 id="transparent-check">How to tell the transparency actually worked</h2>
+              <p>A transparent PNG can look identical to a normal photo on a white screen, so check it properly before you use it.</p>
+              <ul>
+                <li><strong>Look for the checkerboard.</strong> In the tool and in most image viewers, a grey and white checkerboard means see-through. A solid white area means the background is still there.</li>
+                <li><strong>Drop it on a colour.</strong> Open the PNG on a coloured background or a dark slide. If the subject sits cleanly on the colour with no white box around it, the transparency is real.</li>
+                <li><strong>Zoom in on the edges.</strong> Hair, fur and thin edges are where a bad cutout shows. Zoom in close and look for a white halo or a chewed edge — if you see one, pick a sharper original photo and try again.</li>
+                <li><strong>Check the file type.</strong> A file ending in JPG can never be transparent. If your download came back as a JPG, the transparency was lost at the save step — download again and pick PNG.</li>
+              </ul>
+              <h2 id="transparent-mistakes">The 4 mistakes that ruin a transparent image</h2>
+              <table class="a-table">
+                <tr><th>Mistake</th><th>What happens</th><th>The fix</th></tr>
+                <tr><td><strong>Saving as JPG</strong></td><td>JPG cannot hold transparency, so the empty background turns white again.</td><td>Always download as PNG.</td></tr>
+                <tr><td><strong>Screenshotting the preview</strong></td><td>A screenshot saves the checkerboard as part of the picture.</td><td>Use the download button, never a screenshot.</td></tr>
+                <tr><td><strong>Starting with a tiny photo</strong></td><td>A small blurry photo gives rough edges no tool can fix.</td><td>Start with the biggest, sharpest original you have.</td></tr>
+                <tr><td><strong>Skipping the dark background check</strong></td><td>A white halo is invisible on white and obvious on dark.</td><td>Preview the PNG on a dark colour before you use it.</td></tr>
+              </table>
+              <div class="a-callout"><p><strong>Transparency is a property of the file, not the picture.</strong> A PNG with a removed background stays transparent. The same picture saved as a JPG gets a white background back — the format decides, not the tool.</p></div>
+              <h2 id="transparent-uses">Where a transparent image works best</h2>
+              <ul>
+                <li><strong>Logos on websites and invoices:</strong> a transparent logo sits on any page colour without a white box. See the <a href="/make-logo-transparent/">logo guide</a> for the details.</li>
+                <li><strong>Product photos on coloured backgrounds:</strong> one cutout works on a white listing, a coloured banner and a dark post. See the <a href="/remove-background-from-product-photos/">product photo guide</a>.</li>
+                <li><strong>Profile pictures and thumbnails:</strong> a clean cutout on a solid colour stands out in a feed full of rectangles.</li>
+                <li><strong>Stickers, slides and social posts:</strong> a transparent subject layers over any design without a frame around it.</li>
+                <li><strong>Print and packaging:</strong> a transparent PNG drops into a label or a flyer exactly where you want it.</li>
+              </ul>
+              <div class="a-faq">
+                <h2 id="transparent-faq">Questions</h2>
+                <details class="faq"><summary>Is making an image transparent really free?</summary><p>Yes. The Background Remover runs free in your browser, with no account and no watermark. Your image never leaves your device.</p></details>
+                <details class="faq"><summary>Can I make only part of an image transparent?</summary><p>The tool removes the whole background around your subject. If you need one small area gone as well, remove the background first and then tidy the extra bit in the <a href="/photo-editor/">Photo Editor</a>.</p></details>
+                <details class="faq"><summary>My PNG still shows a white box. Why?</summary><p>Two usual causes: the file was saved as a JPG somewhere along the way, or the app you opened it in fills transparent areas with white. Open it in a browser or an image editor to see the real transparency.</p></details>
+                <details class="faq"><summary>Does it work on photos of people, pets and products?</summary><p>Yes — people, pets, products, cars and plants all work. Busy backgrounds and wispy hair need a sharper original photo for the cleanest edge.</p></details>
+                <details class="faq"><summary>What size should the transparent PNG be?</summary><p>Keep the original size for print and listings. If the file is too big for a website, shrink it with the <a href="/image-resizer/">Image Resizer</a> and then compress it with the <a href="/image-compressor/">Image Compressor</a> — both keep the transparency.</p></details>
+              </div>
+            </div>
+            <div class="a-cta"><p>Your image is ten seconds from transparent.</p><a class="btn btn-accent" href="/">Open the Background Remover</a></div>
+            <div class="a-next"><a href="/make-logo-transparent/">Make a logo transparent</a><a href="/how-to-make-a-transparent-png/">How to make a transparent PNG</a><a href="/fix-rough-edges-after-background-removal/">Fix rough edges after background removal</a></div>
+          
+        </div>
+        <nav aria-label="More guides" style="display:flex;flex-wrap:wrap;gap:8px 18px;margin:24px 0 16px;font-size:14px;font-weight:700">
+          <span style="color:var(--muted);font-weight:600">More guides:</span>
+          <a href="/remove-bg-alternative/" style="color:var(--ink-soft)">Remove BG Alternative: The Free Background Remover to Switch To in 2026</a><a href="/make-logo-transparent/" style="color:var(--ink-soft)">Make Logo Transparent: Free, in Under a Minute</a><a href="/how-to-make-a-transparent-png/" style="color:var(--ink-soft)">How to Make a Transparent PNG From Any Photo</a><a href="/transparent-png-vs-jpg-vs-webp/" style="color:var(--ink-soft)">Transparent PNG vs JPG vs WebP: Which Format Do You Actually Need?</a><a href="/remove-background-from-product-photos/" style="color:var(--ink-soft)">Remove Background From Product Photos: The Seller&#x27;s Complete Guide</a><a href="/remove-background-from-photo/" style="color:var(--ink-soft)">Remove Background From Photo — Free, in Your Browser</a><a href="/fix-rough-edges-after-background-removal/" style="color:var(--ink-soft)">Fix Rough Edges After Background Removal: 7 Causes, 7 Fixes</a><a href="/photo-editor-online/" style="color:var(--ink-soft)">Photo Editor Online: Free Photo Editing in Your Browser</a><a href="/make-image-transparent/" style="color:var(--ink-soft)">Make Image Transparent: Free, in Your Browser</a>
+        </nav>
+      </section>
+<footer>
+        <div class="foot-brand">
+          <img src="/assets/logo.svg" alt="" width="30" height="30" />
+          <span class="fb-name">FreeTool<span class="box">Box</span></span>
+          <span class="fb-sub">freetoolbox.tech</span>
+        </div>
+        <nav aria-label="Blog guides" style="display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:16px;font-size:14px;font-weight:700">
+          <span style="color:var(--muted);font-weight:600">Blog:</span>
+          <a href="/remove-bg-alternative/" style="color:var(--ink-soft)">Remove BG alternative</a>
+          <a href="/make-logo-transparent/" style="color:var(--ink-soft)">Make logo transparent</a>
+          <a href="/how-to-make-a-transparent-png/" style="color:var(--ink-soft)">How to make a transparent PNG</a>
+          <a href="/transparent-png-vs-jpg-vs-webp/" style="color:var(--ink-soft)">Transparent PNG vs JPG vs WebP</a>
+          <a href="/remove-background-from-product-photos/" style="color:var(--ink-soft)">Remove background from product photos</a>
+          <a href="/remove-background-from-photo/" style="color:var(--ink-soft)">Remove background from photo</a>
+          <a href="/fix-rough-edges-after-background-removal/" style="color:var(--ink-soft)">Fix rough edges after background removal</a>
+          <a href="/photo-editor-online/" style="color:var(--ink-soft)">Photo editor online</a>
+          <a href="/make-image-transparent/" style="color:var(--ink-soft)">Make image transparent</a>
+        </nav>
+        <div class="foot-row">
+          <p>Background removal runs on ONNX Runtime Web — entirely in your browser. The built-in U²-Net model and the runtime ship with this page, so processing never depends on a download; the larger open-source RMBG-1.4 model by BRIA AI is fetched in the background when your connection allows, and offered as an optional full-quality re-run.</p>
+          <span class="soon">MORE FREE TOOLS COMING — <b>IMAGE COMPRESSOR</b> · <b>RESIZER</b> · <b>CONVERTER</b> · <b>QR GENERATOR</b></span>
+        </div>
+      </footer>
+    </main>
+  </body>
+</html>
