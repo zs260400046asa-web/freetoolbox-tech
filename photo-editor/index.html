@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <meta name="color-scheme" content="light dark" />
-<meta name="description" content="Edit photos online for free. Crop, rotate, adjust brightness and contrast, apply filters, enhance and resize, then download as PNG or JPG. No signup, no watermark, files never leave your browser." />
+<meta name="description" content="Edit photos online for free. Crop, rotate, adjust brightness and contrast, apply filters, add text, enhance and resize, then download as PNG or JPG. No signup, no watermark, files never leave your browser." />
 <link rel="icon" href="data:," />
 <title>Photo Editor Online — Edit Photos Free | FreeToolBox</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -147,6 +147,9 @@
   .dim-field input:focus{border-color:var(--accent);outline:none}
   .lock-btn{width:42px;height:44px;flex:none;border-radius:10px;border:1.5px solid var(--border-strong);background:var(--surface);cursor:pointer;display:grid;place-items:center;color:var(--muted);font-size:16px}
   .lock-btn.locked{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+  .text-input{width:100%;padding:10px 12px;border:1.5px solid var(--border-strong);border-radius:10px;background:var(--surface);color:var(--text);font-size:15px;font-weight:600;font-family:inherit}
+  .text-input:focus{border-color:var(--accent);outline:none}
+  .fmt-field input[type="color"]{width:100%;height:44px;padding:4px;border:1.5px solid var(--border-strong);border-radius:10px;background:var(--surface);cursor:pointer}
 
   .fmt-row{display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap}
   .fmt-field{flex:1;min-width:110px}
@@ -221,7 +224,7 @@
 
   <div class="intro">
     <h1>Edit your photo online, <span class="hl">free</span></h1>
-    <p>Crop, rotate, fix the light and colour, try a filter and download the result. Your photo is edited right here in your browser — nothing is uploaded, ever.</p>
+    <p>Crop, rotate, fix the light and colour, try a filter, add text and download the result. Your photo is edited right here in your browser — nothing is uploaded, ever.</p>
     <div class="intro-meta">
       <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> 100% free</span>
       <span class="chip"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg> No signup</span>
@@ -315,6 +318,21 @@
           </div>
 
           <div class="ctl-group">
+            <h3>Add text <span class="right"><button type="button" id="removeTextBtn">Remove</button></span></h3>
+            <div style="margin-bottom:10px"><input type="text" class="text-input" id="textInput" maxlength="120" placeholder="Type your text" autocomplete="off" /></div>
+            <div class="slider-row"><div class="s-head"><label for="slTextSize">Text size</label><output id="outTextSize">6%</output></div><input type="range" id="slTextSize" min="2" max="15" value="6" /></div>
+            <div class="fmt-row">
+              <div class="fmt-field"><label for="textColor">Text colour</label><input type="color" id="textColor" value="#ffffff" /></div>
+            </div>
+            <div class="seg-row" style="margin-top:10px" id="textPosRow">
+              <button type="button" class="seg-btn" data-pos="top">Top</button>
+              <button type="button" class="seg-btn active" data-pos="centre">Centre</button>
+              <button type="button" class="seg-btn" data-pos="bottom">Bottom</button>
+            </div>
+            <p class="ctl-note">Click on the photo to place the text, or drag it to move it.</p>
+          </div>
+
+          <div class="ctl-group">
             <h3>Resize</h3>
             <div class="dim-row">
               <div class="dim-field"><label for="outWidth">Width (px)</label><input type="number" id="outWidth" min="16" max="8000" /></div>
@@ -357,7 +375,7 @@
     <p class="lead">Three steps, no software to install and no account to create.</p>
     <div class="steps">
       <div class="step"><div class="num">1</div><h3>Add your photo</h3><p>Drag and drop a JPG, PNG or WebP file into the box above, click to browse, or paste one straight from your clipboard.</p></div>
-      <div class="step"><div class="num">2</div><h3>Edit it your way</h3><p>Crop to the shape you need, fix brightness and colour with the sliders, try a filter, or tap Auto enhance for a quick lift.</p></div>
+      <div class="step"><div class="num">2</div><h3>Edit it your way</h3><p>Crop to the shape you need, fix brightness and colour with the sliders, try a filter, add text, or tap Auto enhance for a quick lift.</p></div>
       <div class="step"><div class="num">3</div><h3>Download the result</h3><p>Pick PNG, JPG or WebP, check the new file size in the live preview, and download. The edited photo is yours, watermark-free.</p></div>
     </div>
   </section>
@@ -407,6 +425,10 @@
     <details>
       <summary>Can I crop a photo to a square for a profile picture?</summary>
       <div class="a"><p>Yes. Pick Square in the crop section and the photo is cropped to the middle square. Then set the size to 1080 by 1080 pixels if you want a crisp profile photo, and download as PNG or JPG.</p></div>
+    </details>
+    <details>
+      <summary>Can I add text to a photo?</summary>
+      <div class="a"><p>Yes. Type your text in the Add text section, pick a size and a colour, then click on the photo to place it — or drag it to move it. The text is part of the edited photo, so it is included in the download.</p></div>
     </details>
     <details>
       <summary>Why is my edited file bigger than the original?</summary>
@@ -497,6 +519,8 @@
   var outScale = 100;
   var outW = 0, outH = 0;   // explicit output size in px (honours unlocked resize)
   var lockAspect = true;
+  var textState = { text:'', sizePct:6, color:'#ffffff', x:0.5, y:0.5 };
+  var draggingText = false;
   var showingOriginal = false;
   var rafPending = false;
   var estimateTimer = null;
@@ -581,6 +605,7 @@
     ctx.restore();
     try { ctx.filter = 'none'; } catch(e){}
     if (adj.sharpness > 0) applySharpen(ctx, cw, ch, adj.sharpness / 100);
+    if (textState.text) drawText(ctx, cw, ch);
   }
 
   function applySharpen(ctx, w, h, amount){
@@ -603,6 +628,22 @@
       }
     }
     ctx.putImageData(out, 0, 0);
+  }
+
+  // Text overlay, drawn last so it stays crisp and is included in the download.
+  // Position and size are fractions of the canvas, so they scale to any output size.
+  function drawText(ctx, cw, ch){
+    var px = Math.max(8, Math.round(ch * textState.sizePct / 100));
+    ctx.save();
+    ctx.font = '700 ' + px + 'px "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = textState.color;
+    ctx.shadowColor = 'rgba(0,0,0,0.45)';
+    ctx.shadowBlur = Math.max(2, Math.round(px * 0.12));
+    ctx.shadowOffsetY = Math.max(1, Math.round(px * 0.04));
+    ctx.fillText(textState.text, textState.x * cw, textState.y * ch);
+    ctx.restore();
   }
 
   // Render the edited photo into a canvas sized to fit maxDim (keeping aspect).
@@ -813,6 +854,79 @@
     lockBtn.textContent = lockAspect ? '🔒' : '🔓';
   });
 
+  /* ---------- add text ---------- */
+
+  var textInput = document.getElementById('textInput');
+  var slTextSize = document.getElementById('slTextSize');
+  var outTextSize = document.getElementById('outTextSize');
+  var textColor = document.getElementById('textColor');
+  var removeTextBtn = document.getElementById('removeTextBtn');
+
+  function clearText(){
+    textState.text = ''; textState.sizePct = 6; textState.color = '#ffffff';
+    textState.x = 0.5; textState.y = 0.5;
+    textInput.value = ''; slTextSize.value = 6; outTextSize.textContent = '6%';
+    textColor.value = '#ffffff';
+    document.querySelectorAll('#textPosRow .seg-btn').forEach(function(x){
+      x.classList.toggle('active', x.getAttribute('data-pos') === 'centre');
+    });
+    previewCanvas.style.cursor = '';
+  }
+  function syncTextCursor(){
+    previewCanvas.style.cursor = textState.text ? 'move' : '';
+  }
+
+  textInput.addEventListener('input', function(){
+    textState.text = textInput.value.trim();
+    syncTextCursor();
+    requestPreview();
+  });
+  slTextSize.addEventListener('input', function(){
+    textState.sizePct = parseInt(slTextSize.value, 10);
+    outTextSize.textContent = textState.sizePct + '%';
+    requestPreview();
+  });
+  textColor.addEventListener('input', function(){
+    textState.color = textColor.value;
+    requestPreview();
+  });
+  removeTextBtn.addEventListener('click', function(){
+    clearText(); requestPreview();
+  });
+  document.getElementById('textPosRow').addEventListener('click', function(e){
+    var b = e.target.closest('.seg-btn');
+    if (!b || !img) return;
+    document.querySelectorAll('#textPosRow .seg-btn').forEach(function(x){ x.classList.remove('active'); });
+    b.classList.add('active');
+    var pos = b.getAttribute('data-pos');
+    textState.y = pos === 'top' ? 0.12 : pos === 'bottom' ? 0.88 : 0.5;
+    textState.x = 0.5;
+    requestPreview();
+  });
+  function canvasTextPos(e){
+    var r = previewCanvas.getBoundingClientRect();
+    return { x:(e.clientX - r.left) / r.width, y:(e.clientY - r.top) / r.height };
+  }
+  previewCanvas.addEventListener('pointerdown', function(e){
+    if (!img || !textState.text) return;
+    var p = canvasTextPos(e);
+    textState.x = Math.min(0.98, Math.max(0.02, p.x));
+    textState.y = Math.min(0.98, Math.max(0.02, p.y));
+    draggingText = true;
+    try { previewCanvas.setPointerCapture(e.pointerId); } catch(err){}
+    requestPreview();
+  });
+  previewCanvas.addEventListener('pointermove', function(e){
+    if (!draggingText || !img) return;
+    var p = canvasTextPos(e);
+    textState.x = Math.min(0.98, Math.max(0.02, p.x));
+    textState.y = Math.min(0.98, Math.max(0.02, p.y));
+    requestPreview();
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(function(ev){
+    previewCanvas.addEventListener(ev, function(){ draggingText = false; });
+  });
+
   /* Format */
   fmtSelect.addEventListener('change', function(){
     qualityField.style.display = fmtSelect.value === 'png' ? 'none' : '';
@@ -904,6 +1018,7 @@
       document.getElementById('flipHBtn').classList.remove('active');
       document.getElementById('flipVBtn').classList.remove('active');
       lockBtn.classList.add('locked'); lockBtn.textContent = '🔒';
+      clearText();
       fileNameEl.textContent = f.name;
       fileMetaEl.textContent = img.naturalWidth + " × " + img.naturalHeight + " px · " + fmtBytes(f.size);
       origSizeVal.textContent = fmtBytes(f.size);
@@ -955,6 +1070,7 @@
     });
     document.getElementById('flipHBtn').classList.remove('active');
     document.getElementById('flipVBtn').classList.remove('active');
+    clearText();
     resetOutSize(); applyOutSize(); requestPreview();
   });
 
