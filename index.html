@@ -422,7 +422,19 @@
         .site-nav details.nav-drop .drop-menu { left: auto; right: 0; }
       }
 
-      #tools .card + .card { margin-top: 16px; }
+      #tools .tools-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+      #tools .tools-grid .card { display: flex; flex-direction: column; }
+      #tools .tools-grid .card + .card { margin-top: 0; }
+      .tool-ic { width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft); display: grid; place-items: center; margin-bottom: 14px; }
+      .tool-ic svg { width: 22px; height: 22px; stroke: var(--accent-deep); }
+      .tool-tag { display: inline-block; background: var(--accent-soft); color: var(--accent-deep); font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 4px 10px; border-radius: 999px; margin: 4px 0 14px; align-self: flex-start; }
+      #tools .tools-grid .card .btn { margin-top: auto; align-self: flex-start; }
+      @media (max-width: 900px) {
+        #tools .tools-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+      @media (max-width: 560px) {
+        #tools .tools-grid { grid-template-columns: 1fr; }
+      }
 
       footer { margin-top: 52px; border-top: 1px solid var(--line); padding: 26px 0 40px; }
       .foot-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
@@ -472,6 +484,8 @@
             </div>
           </details>
           <a href="#faq">FAQ</a>
+          <a href="/privacy-policy/">Privacy Policy</a>
+          <a href="/contact/">Contact</a>
           <span class="header-tool">Tool 01 — <b>Background Remover</b></span>
         </nav>
       </header>
@@ -613,25 +627,35 @@
       <!-- ================= MORE TOOLS ================= -->
       <section class="info" id="tools" aria-labelledby="tools-h">
         <div class="sec-head"><span class="sec-num">04</span><h2 id="tools-h">More free tools</h2></div>
+        <div class="tools-grid">
         <div class="card">
+          <span class="tool-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></svg></span>
           <h3>Image Compressor</h3>
-          <p>Make JPG, PNG and WebP images smaller without losing visible quality — right in your browser, no sign-up, no watermark. Perfect for listings, websites and sharing.</p>
+          <p>Shrink JPG, PNG and WebP without losing visible quality.</p>
+          <span class="tool-tag">IMAGE</span>
           <a class="btn btn-accent" href="/image-compressor/">Compress images free</a>
         </div>
         <div class="card">
+          <span class="tool-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
           <h3>Image Resizer</h3>
-          <p>Resize any image to exact pixels, a percentage, or a social media size — Instagram, Facebook, YouTube and more — right in your browser, no sign-up, no watermark.</p>
+          <p>Resize to exact pixels, a percentage, or a social media size.</p>
+          <span class="tool-tag">IMAGE</span>
           <a class="btn btn-accent" href="/image-resizer/">Resize images free</a>
         </div>
         <div class="card">
+          <span class="tool-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg></span>
           <h3>Image Upscaler</h3>
-          <p>Make small images big and sharp — upscale 2x or 4x, smooth grain and enhance colour and contrast — right in your browser, no sign-up, no watermark.</p>
+          <p>Make small images big and sharp, 2x or 4x.</p>
+          <span class="tool-tag">IMAGE</span>
           <a class="btn btn-accent" href="/image-upscaler/">Upscale images free</a>
         </div>
         <div class="card">
+          <span class="tool-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></span>
           <h3>Photo Editor</h3>
-          <p>Edit photos in your browser — crop, rotate and flip, adjust brightness, contrast and colour, and apply filters — no sign-up, no watermark.</p>
+          <p>Crop, rotate, adjust colour and apply filters.</p>
+          <span class="tool-tag">IMAGE</span>
           <a class="btn btn-accent" href="/photo-editor/">Edit photos free</a>
+        </div>
         </div>
       </section>
 
